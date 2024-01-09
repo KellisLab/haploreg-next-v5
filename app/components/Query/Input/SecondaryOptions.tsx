@@ -1,6 +1,6 @@
 "use client";
-import InputContext from "@/app/inputs/inputContext";
-import { InputFields } from "@/app/inputs/inputReducer";
+import InputContext from "@/app/components/Query/Input/dataManagement/inputContext";
+import { InputFields } from "@/app/components/Query/Input/dataManagement/inputReducer";
 import { HStack, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { useContext } from "react";
 

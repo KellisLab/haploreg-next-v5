@@ -1,8 +1,8 @@
 "use client";
-import InputContext from "@/app/inputs/inputContext";
+import InputContext from "@/app/components/Query/Input/dataManagement/inputContext";
 import React, { useContext } from "react";
 import useAllStudies from "./hooks/useAllStudies";
-import { InputFields } from "@/app/inputs/inputReducer";
+import { InputFields } from "@/app/components/Query/Input/dataManagement/inputReducer";
 
 const Query = () => {
   const { inputOptions, dispatch } = useContext(InputContext);
