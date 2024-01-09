@@ -61,6 +61,7 @@ const Query = () => {
             });
           }}
           type="text"
+          style={{ padding: "4px 35px 4px 8px" }}
           className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           placeholder=""
         />
@@ -94,7 +95,6 @@ const Query = () => {
           accept=".txt"
         />
       </div>
-
       <div className="flex mt-2 items-center gap-2">
         <input
           type="radio"
@@ -124,6 +124,7 @@ const Query = () => {
             });
           }}
           value={inputOptions.gwas}
+          style={{ padding: "4px 35px 4px 8px" }}
           className="min-w-0 overflow-hidden mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         >
           <option value="">-- Select a GWAS Study--</option>

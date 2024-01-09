@@ -21,7 +21,7 @@ const SecondaryOptions = () => {
             })
           }
           value={inputOptions.ld}
-          className="block rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           style={{ padding: "4px 35px 4px 8px" }}
         >
           <option value={0.2}>0.2</option>
