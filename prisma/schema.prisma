@@ -1,0 +1,396 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model H3K27ac_v4 {
+  id       String  @id @default("") @db.VarChar(43)
+  peaks_v4 String? @db.VarChar(634)
+}
+
+model H3K36me3_v4 {
+  id       String  @id @default("") @db.VarChar(43)
+  peaks_v4 String? @db.VarChar(634)
+}
+
+model H3K4me1_v4 {
+  id       String  @id @default("") @db.VarChar(43)
+  peaks_v4 String? @db.VarChar(634)
+}
+
+model H3K4me3_v4 {
+  id       String  @id @default("") @db.VarChar(43)
+  peaks_v4 String? @db.VarChar(634)
+}
+
+model H3K9ac_v4 {
+  id       String  @id @default("") @db.VarChar(43)
+  peaks_v4 String? @db.VarChar(634)
+}
+
+model alternate_rsid_lookup {
+  altname String  @id @default("") @db.VarChar(12)
+  ourname String? @db.VarChar(12)
+}
+
+model asn_ld {
+  id String  @id @default("") @db.VarChar(12)
+  ld String? @db.MediumText
+}
+
+model backgrounds_v4 {
+  eid          String @id @default("") @db.VarChar(4)
+  n_all        Int?
+  n_gwas       Int?
+  vanilla_all  Int?
+  imputed_all  Int?
+  methyl_all   Int?
+  acetyl_all   Int?
+  vanilla_gwas Int?
+  imputed_gwas Int?
+  methyl_gwas  Int?
+  acetyl_gwas  Int?
+}
+
+model cell_metadata {
+  id       String  @id @default("") @db.VarChar(28)
+  metadata String? @db.VarChar(124)
+}
+
+model ceu_ld {
+  id String  @id @default("") @db.VarChar(12)
+  ld String? @db.MediumText
+}
+
+model consequences {
+  id          String  @id @default("") @db.VarChar(12)
+  consequence String? @db.VarChar(23)
+}
+
+model coremarks_v3 {
+  id           String  @id @default("") @db.VarChar(35)
+  coremarks_v3 String? @db.VarChar(2025)
+}
+
+model dbsnp_function {
+  id       String  @id @default("") @db.VarChar(12)
+  function String? @db.VarChar(14)
+}
+
+model disease_enhancer {
+  disease_id        String  @id @default("") @db.VarChar(10)
+  disease_name      String? @db.Text
+  enhancers         String? @db.Text
+  enhancersNum      String? @db.Text
+  enhancersVanilla  String? @db.Text
+  enhancersImputed  String? @db.Text
+  enhancersMarks_v4 String? @db.Text
+}
+
+model dnase {
+  id       String  @id @default("") @db.VarChar(12)
+  proteins String? @db.VarChar(2027)
+}
+
+model dnase_clusters {
+  id            String @id @default("") @db.VarChar(12)
+  dnase_cluster Int?   @db.TinyInt
+}
+
+model dnase_v3 {
+  id       String  @id @default("") @db.VarChar(35)
+  dnase_v3 String? @db.VarChar(264)
+}
+
+model drivers {
+  id   String  @id @default("") @db.VarChar(21)
+  info String? @db.VarChar(1730)
+}
+
+model enhancer_background_frequency {
+  background String  @id @default("") @db.VarChar(30)
+  frequency  String? @db.VarChar(1128)
+}
+
+model enhancer_background_frequency_v2 {
+  background String  @id @default("") @db.VarChar(15)
+  frequency  String? @db.VarChar(10554)
+}
+
+model eqtl {
+  id    String  @id @default("") @db.VarChar(12)
+  eqtls String? @db.VarChar(96)
+}
+
+model eqtl_201511 {
+  id       String  @id @default("") @db.VarChar(29)
+  marks_v4 String? @db.MediumText
+}
+
+model eqtl_metadata {
+  id   String  @id @default("") @db.VarChar(20)
+  name String? @db.VarChar(93)
+  pmid Int?
+}
+
+model eqtl_metadata_201511 {
+  id     String  @id @default("") @db.VarChar(200)
+  pmid   Int?
+  name   String? @db.VarChar(200)
+  source String? @db.VarChar(200)
+}
+
+model eqtl_metadata_v4 {
+  id   String  @id @default("") @db.VarChar(200)
+  pmid Int?
+  name String? @db.VarChar(100)
+}
+
+model eqtl_v4 {
+  id       String  @id @default("") @db.VarChar(29)
+  marks_v4 String? @db.VarChar(5517)
+}
+
+model gencode {
+  id        String  @id @default("") @db.VarChar(12)
+  distance  Int?
+  direction Int?    @db.TinyInt
+  gen_id    String? @db.VarChar(18)
+  gene_name String? @db.VarChar(18)
+}
+
+model gene_metadata {
+  id       String  @id @default("") @db.VarChar(15)
+  metadata String? @db.VarChar(353)
+}
+
+model gerp {
+  id String @id @default("") @db.VarChar(12)
+}
+
+model grasp_qtl_201511 {
+  rsid         String  @id @default("") @db.VarChar(30)
+  associations String? @db.MediumText
+}
+
+model gtex {
+  id   String  @id @default("") @db.VarChar(43)
+  gtex String? @db.VarChar(3175)
+}
+
+model gwas {
+  pmid Int     @id @default(0)
+  name String? @db.VarChar(87)
+  snps String? @db.VarChar(538)
+}
+
+model gwas_201511 {
+  gwas_idx Int     @id @default(0)
+  name     String? @db.VarChar(200)
+  snps     String? @db.VarChar(10000)
+}
+
+model gwas_v2 {
+  gwas_idx Int     @id @default(0)
+  name     String? @db.VarChar(174)
+  snps     String? @db.VarChar(9726)
+}
+
+model gwas_v3 {
+  gwas_idx Int     @id @default(0)
+  name     String? @db.VarChar(174)
+  snps     String? @db.VarChar(9726)
+}
+
+model hg19liftover {
+  id      String  @id @default("") @db.VarChar(12)
+  hg19chr String? @db.VarChar(2)
+  hg19pos Int?
+}
+
+model hg38 {
+  chr String? @db.VarChar(2)
+  pos Int?
+  id  String  @id @default("") @db.VarChar(43)
+}
+
+model honeybadger {
+  id          String  @id @default("") @db.VarChar(43)
+  honeybadger String? @db.VarChar(11)
+}
+
+model imputedstates {
+  id     String  @id @default("") @db.VarChar(43)
+  states String? @db.VarChar(2031)
+}
+
+model instances_v3 {
+  id           String  @id @default("") @db.VarChar(11)
+  instances_v3 String? @db.VarChar(10400)
+}
+
+model ld_v2_afr {
+  id String  @id @default("") @db.VarChar(21)
+  ld String? @db.MediumText
+}
+
+model ld_v2_amr {
+  id String  @id @default("") @db.VarChar(21)
+  ld String? @db.MediumText
+}
+
+model ld_v2_asn {
+  id String  @id @default("") @db.VarChar(21)
+  ld String? @db.MediumText
+}
+
+model ld_v2_eur {
+  id String  @id @default("") @db.VarChar(21)
+  ld String? @db.MediumText
+}
+
+model marks_v4 {
+  id       String  @id @default("") @db.VarChar(43)
+  marks_v4 String? @db.VarChar(6942)
+}
+
+model motif_metadata {
+  id         String  @id @default("") @db.VarChar(19)
+  iupac      String? @db.VarChar(30)
+  revcomp    String? @db.VarChar(30)
+  sourcename String? @db.VarChar(86)
+  lowthresh  String? @db.VarChar(9)
+  highthresh String? @db.VarChar(9)
+}
+
+model motifs_hit {
+  id   String  @id @default("") @db.VarChar(12)
+  hits String? @db.VarChar(1128)
+}
+
+model motifs_per_dnase_cluster {
+  dnase_cluster   Int     @id @default(0) @db.TinyInt
+  enriched_motifs String? @db.VarChar(1010)
+}
+
+model motifs_per_state_cluster {
+  state_cluster   String  @id @default("") @db.VarChar(7)
+  enriched_motifs String? @db.VarChar(1139)
+}
+
+model nhgri_per_snp_201511 {
+  rsid         String  @id @default("") @db.VarChar(30)
+  associations String? @db.VarChar(14000)
+}
+
+model oligos {
+  id  String  @id @default("") @db.VarChar(11)
+  ref String? @db.VarChar(312)
+  alt String? @db.VarChar(311)
+}
+
+model omega {
+  id String @id @default("") @db.VarChar(12)
+}
+
+model proteins {
+  id       String  @id @default("") @db.VarChar(12)
+  proteins String? @db.VarChar(2875)
+}
+
+model refseq {
+  id        String  @id @default("") @db.VarChar(12)
+  distance  Int?
+  direction Int?    @db.TinyInt
+  gen_id    String? @db.VarChar(18)
+  gene_name String? @db.VarChar(18)
+}
+
+model roadmap_metadata {
+  eid       String  @id @default("") @db.VarChar(7)
+  shortname String? @db.VarChar(26)
+  longname  String? @db.VarChar(74)
+  organ     String? @db.VarChar(18)
+}
+
+model roadmap_metadata_v4 {
+  eid       String  @id @default("") @db.VarChar(100)
+  organ     String? @db.VarChar(100)
+  shortname String? @db.VarChar(100)
+  longname  String? @db.VarChar(100)
+}
+
+model samples_v4 {
+  eid     String  @id @default("") @db.VarChar(4)
+  samples String? @db.VarChar(68)
+}
+
+model snp {
+  id      String  @id @default("") @db.VarChar(12)
+  hg18chr String? @db.VarChar(2)
+  hg18pos Int?
+  ref     String? @db.VarChar(49)
+  alt     String? @db.VarChar(49)
+  ceu     Float?  @db.Float
+  jptchb  Float?  @db.Float
+  yri     Float?  @db.Float
+}
+
+model snp_v2 {
+  chr               String? @db.VarChar(2)
+  pos               Int?
+  ref               String? @db.VarChar(1001)
+  alt               String? @db.VarChar(428)
+  is_kg             Int?    @db.TinyInt
+  afr               Float?  @db.Float
+  amr               Float?  @db.Float
+  asn               Float?  @db.Float
+  eur               Float?  @db.Float
+  id                String  @id @default("") @db.VarChar(43)
+  gencode_distance  Int?
+  gencode_direction Int?    @db.TinyInt
+  gencode_id        String? @db.VarChar(18)
+  gencode_name      String? @db.VarChar(22)
+  dummy             String? @db.VarChar(43)
+  refseq_distance   Int?
+  refseq_direction  Int?    @db.TinyInt
+  refseq_id         String? @db.VarChar(12)
+  refseq_name       String? @db.VarChar(16)
+  enc_enh           String? @db.VarChar(209)
+  remc_enh          String? @db.VarChar(1679)
+  enc_pro           String? @db.VarChar(209)
+  remc_pro          String? @db.VarChar(1395)
+  dnase             String? @db.VarChar(3112)
+  motifs            String? @db.VarChar(6130)
+  consequences      String? @db.VarChar(15)
+  omega             Int?
+  gerp              Int?
+  proteins          String? @db.VarChar(3519)
+
+  @@index([chr], map: "chr_index")
+  @@index([pos], map: "pos_index")
+}
+
+model state_clusters {
+  id             String  @id @default("") @db.VarChar(12)
+  state_clusters String? @db.VarChar(82)
+}
+
+model states {
+  id     String  @id @default("") @db.VarChar(12)
+  states String? @db.VarChar(74)
+}
+
+model vanillastates {
+  id     String  @id @default("") @db.VarChar(35)
+  states String? @db.VarChar(2025)
+}
+
+model yri_ld {
+  id String  @id @default("") @db.VarChar(12)
+  ld String? @db.MediumText
+}
