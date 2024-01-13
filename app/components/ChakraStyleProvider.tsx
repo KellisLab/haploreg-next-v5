@@ -2,6 +2,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
+import { ReactNode } from "react";
 
 const theme = extendTheme({
   components: {
@@ -49,8 +50,12 @@ const theme = extendTheme({
   },
 });
 
-export default theme;
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
+interface Props {
+  children: ReactNode;
 }
+
+const ChakraStyleProvider = ({ children }: Props) => {
+  return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
+};
+
+export default ChakraStyleProvider;

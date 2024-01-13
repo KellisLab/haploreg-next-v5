@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "./components/StyleProvider";
+import ChakraStyleProvider from "./components/ChakraStyleProvider";
+import ReactQueryProvider from "./components/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "HaploReg v5 Beta",
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <ReactQueryProvider>
+          <ChakraStyleProvider>{children}</ChakraStyleProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
