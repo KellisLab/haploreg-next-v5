@@ -1,4 +1,4 @@
-import QueryType from "../../../../types/QueryType";
+import QueryType from "@/app/types/QueryType";
 
 export enum InputFields {
   query,
