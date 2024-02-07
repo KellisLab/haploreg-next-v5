@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { InputOptions } from "../../Input/dataManagement/inputReducer";
-import { RegionTableType } from "../../Query";
+import { ExplorerOptionsType, RegionTableType } from "../../Query";
 
 const useQueryResult = (inputOptions: InputOptions) => {
-  const [error, setError] = useState("");
   const [regionTable, setRegionTable] = useState<RegionTableType>(
     {} as RegionTableType
   );
-  const [lociAssociations, setLociAssociations] = useState<Map<
-    string,
-    Array<string>
-  > | null>(null);
-  const [lociAssociationError, setLociAssociationError] = useState<any>();
+  const [explorerOptions, setExplorerOptions] = useState<ExplorerOptionsType>(
+    {} as ExplorerOptionsType
+  );
 
   const query = async () => {
     switch (inputOptions.inputType) {
@@ -38,8 +35,7 @@ const useQueryResult = (inputOptions: InputOptions) => {
       }
     }
     setRegionTable({ ...regionTable, isLoading: true });
-    setLociAssociations(null);
-    setLociAssociationError(null);
+    setExplorerOptions({ ...explorerOptions, isLoading: true });
     // hook with react query to send a get request to route .tsxin compile table  // do this in async hook in backend
     const url = new URL("api/compileTable", location.origin);
     url.searchParams.append("input", JSON.stringify(inputOptions));
@@ -50,14 +46,18 @@ const useQueryResult = (inputOptions: InputOptions) => {
       input: outputJson.input,
       headers: outputJson.success.headers,
       regionTableData: outputJson.success.result,
-      regionTableError: "",
+      regionTableError: outputJson.error,
+    });
+    setExplorerOptions({
+      isLoading: false,
+      explorerOptionsData: outputJson.success.igvExplorerResult,
+      explorerOptionsError: outputJson.error,
     });
   };
 
   return {
     regionTable,
-    lociAssociations,
-    lociAssociationError,
+    explorerOptions,
     query,
   };
 };

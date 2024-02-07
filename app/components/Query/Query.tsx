@@ -9,13 +9,22 @@ import InputArea from "./Input/InputArea";
 import HaploRegTable from "./Table/HaploRegTable";
 import { Button } from "@chakra-ui/react";
 import useHaploRegTableData from "./Table/hooks/useHaploRegTableData";
+import Explorer from "./Explorer/Explorer";
 
+export interface ExplorerOptionsType {
+  isLoading: Boolean;
+  explorerOptionsData: Map<string, string[]>;
+  //   {
+  //     [k: string]: string[];
+  //   }
+  explorerOptionsError: string | null;
+}
 export interface RegionTableType {
   isLoading: Boolean;
   input: InputOptions;
   headers: string[];
   regionTableData: string[][][];
-  regionTableError: string;
+  regionTableError: string | null;
 }
 
 const Query = () => {
@@ -36,7 +45,8 @@ const Query = () => {
     queryType: QueryType.Unknown,
   });
 
-  const { regionTable, query } = useHaploRegTableData(inputOptions);
+  const { regionTable, explorerOptions, query } =
+    useHaploRegTableData(inputOptions);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -50,6 +60,7 @@ const Query = () => {
           <InputArea />
           <Button type="submit">Submit</Button>
         </form>
+        <Explorer options={explorerOptions} />
         {/* <Suspense fallback={<DNALoadingSpinner />}> It would be nice to make this server side at some point*/}
         <HaploRegTable regionTable={regionTable} />
         {/* </Suspense> */}
