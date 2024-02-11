@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ExplorerOptionsType } from "../Query";
 import useHaploBlockEnhancement from "./hooks/useHaploBlockEnhancement";
 
@@ -7,31 +7,29 @@ interface Props {
 }
 
 export interface ExplorerData {
-  // what backend compileExplorer gives us
+  enrichments: number[];
   isLoading: boolean;
 }
 
 const Explorer = ({
   options: { isLoading, explorerOptionsData, explorerOptionsError },
 }: Props) => {
-  const [snps, setSnps] = useState<string[]>([]);
-  const { query, snpdata } = useHaploBlockEnhancement(snps);
-
+  const { snpdata } = useHaploBlockEnhancement(
+    Object.entries(explorerOptionsData).map((items) => items[0].split(" ")[0])
+  );
   if (isLoading) return null;
 
   if (explorerOptionsError) return <p>{explorerOptionsError}</p>;
   if (!explorerOptionsData) return null;
 
-  console.log(explorerOptionsData);
-
   return (
     <div className="tm-5 p-10 bg-slate-500">
-      {Object.entries(explorerOptionsData).map(
-        ([key, snps]) => (
-          <p key={key}>{key}</p>
-        )
-        //snps.map((snp: string) => <p key={snp}>{snp}</p>)
-      )}
+      {Object.entries(explorerOptionsData).map(([key, snps]) => (
+        <p key={key}>{key}</p>
+      ))}
+      {snpdata.enrichments
+        ? snpdata.enrichments.map((val) => <p key={val}>{val}</p>)
+        : null}
     </div>
   );
 };

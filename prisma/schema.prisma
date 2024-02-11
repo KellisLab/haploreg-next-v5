@@ -395,3 +395,10 @@ model yri_ld {
   id String  @id @default("") @db.VarChar(12)
   ld String? @db.MediumText
 }
+
+model lcl_gm19238 {
+  chr   String? @db.VarChar(10)
+  start Int?
+  end   Int?
+  chunk String  @id @db.VarChar(25)
+}

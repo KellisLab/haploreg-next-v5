@@ -60,7 +60,9 @@ const Query = () => {
           <InputArea />
           <Button type="submit">Submit</Button>
         </form>
-        <Explorer options={explorerOptions} />
+        {explorerOptions.explorerOptionsData ? (
+          <Explorer options={explorerOptions} />
+        ) : null}
         {/* <Suspense fallback={<DNALoadingSpinner />}> It would be nice to make this server side at some point*/}
         <HaploRegTable regionTable={regionTable} />
         {/* </Suspense> */}

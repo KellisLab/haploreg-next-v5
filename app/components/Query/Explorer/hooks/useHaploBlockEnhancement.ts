@@ -1,25 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExplorerData } from "../Explorer";
+import { RSC_ACTION_CLIENT_WRAPPER_ALIAS } from "next/dist/lib/constants";
 
 const useHaploBlockEnhancement = (snps: string[]) => {
   const [snpdata, setSnpData] = useState<ExplorerData>({} as ExplorerData);
 
-  // probabily just do a useEffect hook instead of this crap
-  const query = async () => {
-    setSnpData({ ...snpdata, isLoading: true });
-    // hook with react query to send a get request to route .tsxin compile table  // do this in async hook in backend
-    const url = new URL("api/compileExplorer", location.origin);
-    //url.searchParams.append("input", );
-    const response = await fetch(url);
-    const outputJson = await response.json();
-    setSnpData({
-      isLoading: false,
-    });
-  };
+  useEffect(() => {
+    const query = async () => {
+      setSnpData({ ...snpdata, isLoading: true });
+      const url = new URL("api/compileExplorer", location.origin);
+      url.searchParams.append("input", JSON.stringify(snps));
+      const response = await fetch(url);
+      const outputJson = await response.json();
+      setSnpData({
+        isLoading: false,
+        enrichments: outputJson.success.data,
+      });
+    };
+    query();
+  }, []);
 
   return {
     snpdata,
-    query,
   };
 };
 
