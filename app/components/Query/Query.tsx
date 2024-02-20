@@ -10,22 +10,7 @@ import HaploRegTable from "./Table/HaploRegTable";
 import { Button } from "@chakra-ui/react";
 import useHaploRegTableData from "./Table/hooks/useHaploRegTableData";
 import Explorer from "./Explorer/Explorer";
-
-export interface ExplorerOptionsType {
-  isLoading: Boolean;
-  explorerOptionsData: Map<string, string[]>;
-  //   {
-  //     [k: string]: string[];
-  //   }
-  explorerOptionsError: string | null;
-}
-export interface RegionTableType {
-  isLoading: Boolean;
-  input: InputOptions;
-  headers: string[];
-  regionTableData: string[][][];
-  regionTableError: string | null;
-}
+import useHaploBlockEnhancement from "./Explorer/hooks/useHaploBlockEnrichment";
 
 const Query = () => {
   const [showInteractiveExplorer, setShowInteractiveExplorer] = useState(true);
@@ -45,12 +30,15 @@ const Query = () => {
     queryType: QueryType.Unknown,
   });
 
-  const { regionTable, explorerOptions, query } =
-    useHaploRegTableData(inputOptions);
+  const { regionTable, queryTable } = useHaploRegTableData(inputOptions);
+
+  const { enrichmentData, queryEnrichments } =
+    useHaploBlockEnhancement(inputOptions);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    query();
+    queryTable();
+    queryEnrichments();
   };
 
   return (
@@ -60,8 +48,8 @@ const Query = () => {
           <InputArea />
           <Button type="submit">Submit</Button>
         </form>
-        {explorerOptions.explorerOptionsData ? (
-          <Explorer options={explorerOptions} />
+        {enrichmentData ? (
+          <Explorer tableData={regionTable} enrichmentData={enrichmentData} />
         ) : null}
         {/* <Suspense fallback={<DNALoadingSpinner />}> It would be nice to make this server side at some point*/}
         <HaploRegTable regionTable={regionTable} />

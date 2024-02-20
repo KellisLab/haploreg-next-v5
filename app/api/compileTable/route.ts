@@ -406,7 +406,6 @@ export async function GET(request: NextRequest) {
     result.push(...(await Promise.all(resultPromises)));
     const servedData = result.map((result) => result[0]);
 
-    console.log(returnMap);
     console.log(Object.fromEntries(returnMap.entries()));
 
     return NextResponse.json({
@@ -423,7 +422,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       input: input,
       error:
-        "Unexpected error occured in HQ. Please email haploreg@mit.edu with a screenshot of this page. Thank you!",
+        "Unexpected error occured in CT. Please email haploreg@mit.edu with a screenshot of this page. Thank you!",
     });
   }
 }

@@ -1,17 +1,23 @@
 import QueryType from "@/app/types/QueryType";
 import { Fragment } from "react";
-import { RegionTableType } from "../Query";
 import RegionTable from "./RegionTable";
 import DNALoadingSpinner from "../../Loader/DNALoadingSpinner";
+import { RegionTableType } from "./hooks/useHaploRegTableData";
 
 interface Props {
   regionTable: RegionTableType;
 }
 
 const TabledData = ({
-  regionTable: { regionTableData, regionTableError, input, headers, isLoading },
+  regionTable: {
+    regionTableData,
+    regionTableError,
+    input,
+    headers,
+    isCTLoading,
+  },
 }: Props) => {
-  if (isLoading)
+  if (isCTLoading)
     return (
       <div className="flex justify-center" style={{ height: "135px" }}>
         <DNALoadingSpinner />

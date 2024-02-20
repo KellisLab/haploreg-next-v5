@@ -1,35 +1,27 @@
 import React from "react";
-import { ExplorerOptionsType } from "../Query";
-import useHaploBlockEnhancement from "./hooks/useHaploBlockEnhancement";
+import { RegionTableType } from "../Table/hooks/useHaploRegTableData";
+import { EnrichmentDataType } from "./hooks/useHaploBlockEnrichment";
 
 interface Props {
-  options: ExplorerOptionsType;
-}
-
-export interface ExplorerData {
-  enrichments: number[];
-  isLoading: boolean;
+  tableData: RegionTableType;
+  enrichmentData: EnrichmentDataType;
 }
 
 const Explorer = ({
-  options: { isLoading, explorerOptionsData, explorerOptionsError },
+  tableData: { isCTLoading, input, headers, regionTableData, regionTableError },
+  enrichmentData: { isCELoading, enrichments },
 }: Props) => {
-  const { snpdata } = useHaploBlockEnhancement(
-    Object.entries(explorerOptionsData).map((items) => items[0].split(" ")[0])
-  );
-  if (isLoading) return null;
-
-  if (explorerOptionsError) return <p>{explorerOptionsError}</p>;
-  if (!explorerOptionsData) return null;
+  if (isCELoading || isCTLoading) return null;
+  if (!enrichments) return null;
 
   return (
     <div className="tm-5 p-10 bg-slate-500">
-      {Object.entries(explorerOptionsData).map(([key, snps]) => (
-        <p key={key}>{key}</p>
+      {headers.map((header, index) => (
+        <p key={index}>{header}</p>
       ))}
-      {snpdata.enrichments
-        ? snpdata.enrichments.map((val) => <p key={val}>{val}</p>)
-        : null}
+      {enrichments.map((header, index) => (
+        <p key={index}>{header}</p>
+      ))}
     </div>
   );
 };

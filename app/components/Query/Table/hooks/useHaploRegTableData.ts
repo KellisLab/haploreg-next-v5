@@ -1,16 +1,23 @@
 import { useState } from "react";
 import { InputOptions } from "../../Input/dataManagement/inputReducer";
-import { ExplorerOptionsType, RegionTableType } from "../../Query";
+
+export interface RegionTableType {
+  isCTLoading: Boolean;
+  input: InputOptions;
+  headers: string[];
+  regionTableData: string[][][];
+  regionTableError: string | null;
+}
 
 const useQueryResult = (inputOptions: InputOptions) => {
   const [regionTable, setRegionTable] = useState<RegionTableType>(
     {} as RegionTableType
   );
-  const [explorerOptions, setExplorerOptions] = useState<ExplorerOptionsType>(
-    {} as ExplorerOptionsType
-  );
+  // const [explorerOptions, setExplorerOptions] = useState<ExplorerOptionsType>(
+  //   {} as ExplorerOptionsType
+  // );
 
-  const query = async () => {
+  const queryTable = async () => {
     switch (inputOptions.inputType) {
       case "gwas": {
         if (inputOptions.gwas === "") {
@@ -34,31 +41,31 @@ const useQueryResult = (inputOptions: InputOptions) => {
         break;
       }
     }
-    setRegionTable({ ...regionTable, isLoading: true });
-    setExplorerOptions({ ...explorerOptions, isLoading: true });
+    setRegionTable({ ...regionTable, isCTLoading: true });
+    // setExplorerOptions({ ...explorerOptions, isLoading: true });
     // hook with react query to send a get request to route .tsxin compile table  // do this in async hook in backend
     const url = new URL("api/compileTable", location.origin);
     url.searchParams.append("input", JSON.stringify(inputOptions));
     const response = await fetch(url);
     const outputJson = await response.json();
     setRegionTable({
-      isLoading: false,
+      isCTLoading: false,
       input: outputJson.input,
       headers: outputJson.success.headers,
       regionTableData: outputJson.success.result,
       regionTableError: outputJson.error,
     });
-    setExplorerOptions({
-      isLoading: false,
-      explorerOptionsData: outputJson.success.igvExplorerResult,
-      explorerOptionsError: outputJson.error,
-    });
+    // setExplorerOptions({
+    //   isLoading: false,
+    //   explorerOptionsData: outputJson.success.igvExplorerResult,
+    //   explorerOptionsError: outputJson.error,
+    // });
   };
 
   return {
     regionTable,
-    explorerOptions,
-    query,
+    // explorerOptions,
+    queryTable,
   };
 };
 
