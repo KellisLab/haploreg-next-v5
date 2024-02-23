@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { InputOptions } from "../../Input/dataManagement/inputReducer";
+import objectToMap from "@/app/api/compileExplorer/helpers/objectToMap";
 
 export interface EnrichmentDataType {
-  enrichments: number[];
+  snps: string[];
+  enrichments: Map<string, Map<string, number>>;
   isCELoading: boolean;
 }
 
@@ -20,7 +22,8 @@ const useHaploBlockEnrichment = (inputOptions: InputOptions) => {
     const outputJson = await response.json();
     setEnrichmentData({
       isCELoading: false,
-      enrichments: outputJson.success.data,
+      snps: outputJson.success.snps,
+      enrichments: objectToMap(outputJson.success.enrichments),
     });
   };
 

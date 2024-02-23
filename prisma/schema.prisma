@@ -396,9 +396,26 @@ model yri_ld {
   ld String? @db.MediumText
 }
 
-model lcl_gm19238 {
+model bss00471_lcl_lcl_gm19238 {
   chr   String? @db.VarChar(10)
   start Int?
   end   Int?
   chunk String  @id @db.VarChar(25)
+}
+
+model bss00043_adip_tissue {
+  chr   String? @db.VarChar(10)
+  start Int?
+  end   Int?
+  chunk String  @id @db.VarChar(25)
+}
+
+model bss {
+  chr         String? @db.VarChar(16)
+  start       Int?
+  end         Int?
+  chunk       String? @db.VarChar(64)
+  tissue_id   Int?
+  enhancer_id String  @id @db.VarChar(64)
+  tissue_name String? @db.VarChar(64)
 }

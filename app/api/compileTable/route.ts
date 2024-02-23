@@ -406,8 +406,6 @@ export async function GET(request: NextRequest) {
     result.push(...(await Promise.all(resultPromises)));
     const servedData = result.map((result) => result[0]);
 
-    console.log(Object.fromEntries(returnMap.entries()));
-
     return NextResponse.json({
       input: input,
       success: {

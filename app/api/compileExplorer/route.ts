@@ -3,6 +3,19 @@ import prisma from "@/prisma/client";
 import enrichment from "./helpers/enrichment";
 import { InputOptions } from "@/app/components/Query/Input/dataManagement/inputReducer";
 import QueryType from "@/app/types/QueryType";
+import mapToObjectRec from "./helpers/mapToObjectRec";
+
+interface snpInfo {
+  chr: any;
+  pos: any;
+  id: any;
+}
+
+interface enhancerInfo {
+  start: any;
+  end: any;
+  tissue_id: any;
+}
 
 const MAX_INTERVAL: number = 10000000;
 const MAX_QUERY: number = 10000;
@@ -116,13 +129,12 @@ export async function GET(request: NextRequest) {
       });
     // SELECT chr, pos, id from snp_v2 WHERE id IN ('rs10', 'rs15', 'rs20', 'rs28716236') ORDER BY chr, pos
 
-    const allEnrichments = [];
+    const allEnhancerPromises = [];
     for (const snp of snpPositions) {
       // for all snps that are of interest
       const chrNumName = "chr" + snp.chr;
-      const enhancers = await prisma.lcl_gm19238.findMany({
-        // find all enhancers
-        select: { start: true, end: true },
+      const snpEnhancers = prisma.bss.findMany({
+        select: { start: true, end: true, tissue_id: true },
         where: {
           AND: [
             { chr: chrNumName },
@@ -131,23 +143,46 @@ export async function GET(request: NextRequest) {
           ],
         },
       });
-      // for each enhancer, calculate enrichment
-      let totalEnrichment = 0;
+      allEnhancerPromises.push(snpEnhancers);
+    }
+
+    const allEnhancers = await Promise.all(allEnhancerPromises);
+    const snpEnhancerPairs = snpPositions.map((obj, index) => [
+      obj,
+      allEnhancers[index],
+    ]);
+
+    // console.log(allEnhancers);
+
+    const allEnrichments: Map<string, Map<string, number>> = new Map();
+    for (const pair of snpEnhancerPairs) {
+      const snp: snpInfo = pair[0] as snpInfo;
+      const enhancers: enhancerInfo[] = pair[1] as enhancerInfo[];
+      const snpEnrichment: Map<string, number> = new Map();
       for (const enhancer of enhancers) {
-        const enrichmentVal = enrichment(
+        const enrichmentStats = enrichment(
           snp.pos,
           enhancer.start!,
           enhancer.end!
         );
-        totalEnrichment += enrichmentVal[0];
+        const enrichmentValue: number = enrichmentStats[0];
+        const nearestEnhancer: number = enrichmentStats[1];
+        snpEnrichment.set(
+          enhancer.tissue_id,
+          enrichmentValue + (snpEnrichment.get(enhancer.tissue_id) ?? 0)
+        );
       }
-      allEnrichments.push(totalEnrichment);
+      allEnrichments.set(snp.id, snpEnrichment);
     }
+
+    // add alternate querying strategy
+    // console.log(allEnrichments);
 
     return NextResponse.json({
       input: input,
       success: {
-        data: allEnrichments,
+        snps: snps,
+        enrichments: mapToObjectRec(allEnrichments),
       },
     });
   } catch (error) {
@@ -160,3 +195,49 @@ export async function GET(request: NextRequest) {
     });
   }
 }
+
+// const snpEnrichments = [];
+// const bss00043 = prisma.bss00043_adip_tissue.findMany({
+//   select: { start: true, end: true },
+//   where: {
+//     AND: [
+//       { chr: chrNumName },
+//       { start: { gte: snp.pos - 2500 } },
+//       { end: { lte: snp.pos + 2500 } },
+//     ],
+//   },
+// });
+// const bss00471 = prisma.bss00471_lcl_lcl_gm19238.findMany({
+//   // find all enhancers
+//   select: { start: true, end: true },
+//   where: {
+//     AND: [
+//       { chr: chrNumName },
+//       { start: { gte: snp.pos - 2500 } },
+//       { end: { lte: snp.pos + 2500 } },
+//     ],
+//   },
+// });
+// snpEnrichments.push(bss00043);
+// snpEnrichments.push(bss00471);
+// const enrichments = await Promise.all(snpEnrichments);
+
+// for each tissue, calculate enrichment
+
+// for (const tissue of enrichments) {
+//   //
+//   let totalEnrichment = 0;
+//   for (const enhancer of tissue) {
+//     const enrichmentVal = enrichment(
+//       snp.pos,
+//       enhancer.start!,
+//       enhancer.end!
+//     );
+//     totalEnrichment += enrichmentVal[0];
+//   }
+//   allEnrichments.set(snp.id, [
+//     ...(allEnrichments.get(snp.id) ?? []),
+//     totalEnrichment,
+//   ]);
+// }
+// }
