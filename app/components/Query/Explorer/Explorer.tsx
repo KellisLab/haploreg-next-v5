@@ -3,6 +3,8 @@ import { RegionTableType } from "../Table/hooks/useHaploRegTableData";
 import { EnrichmentDataType } from "./hooks/useHaploBlockEnrichment";
 import EnrichmentTable from "./components/EnrichmentTable";
 import { Spinner } from "@chakra-ui/react";
+import EnrichmentHeatmap from "./components/EnrichmentHeatmap";
+import { Text } from "@chakra-ui/react";
 
 interface Props {
   tableData: RegionTableType;
@@ -15,35 +17,17 @@ const Explorer = ({
 }: Props) => {
   // if (isCELoading || isCTLoading) return null;
   if (!enrichments || !headers) return null;
-  console.log(enrichments);
+  // console.log(enrichments);
 
   return (
     <div className="m-5 ">
+      {snps.map((value, index) => (
+        <div key={index}>
+          <Text fontSize="xs">{value}</Text>
+        </div>
+      ))}
       <div className="p-5 rounded-md bg-slate-200">
-        <EnrichmentTable />
-        {isCELoading ? (
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Spinner size="sm" />
-          </span>
-        ) : (
-          Array.from(enrichments.entries()).map((snp, idx1) => (
-            <div key={idx1}>
-              <span>{snp[0]}:</span>
-              {Array.from(snp[1].entries()).map((tissue, idx2) => (
-                <span key={idx2}>
-                  {tissue[0]},{tissue[1]};
-                </span>
-              ))}
-            </div>
-          ))
-        )}
-        {/* <EnrichmentTable /> */}
+        <EnrichmentHeatmap enrichments={enrichments} />
       </div>
     </div>
   );
