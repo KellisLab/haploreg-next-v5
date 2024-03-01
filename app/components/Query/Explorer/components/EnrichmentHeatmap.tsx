@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Button, Grid, GridItem } from "@chakra-ui/react";
 import { useState } from "react";
 import HeatmapColHeader from "./HeatmapColHeader";
 import HeatmapRowHeader from "./HeatmapRowHeader";
@@ -8,33 +8,24 @@ interface Props {
 }
 
 const EnrichmentHeatmap = ({ enrichments }: Props) => {
-  // on new enrichments, we should just have nothin in the tissue filters,
-  // if it updates, we should change the subset of enrichments that go into the output
-  // create a new
-  const [tissueFilters, setTissueFilters] = useState<string[]>([]);
-  const [snpFilters, setSnpFilters] = useState<string[]>([]);
-
-  // add another state that changes only when the filter submit button is hit,
-
-  //   const enrichmentsToUse = new Map();
-  //   for (const snp in enrichments.keys()) {
-  //     if (snpFilters.includes(snp))
-  //       enrichmentsToUse.set(snp, enrichments.get(snp));
-  //   } // table with only snps we want with references to the prop
+  const [tissueFilter, setTissueFilter] = useState<string[]>([]);
+  const [snpFilter, setSnpFilter] = useState<string[]>([]);
+  const [appliedTissueFilter, setAppliedTissueFilter] = useState<string[]>([]);
+  const [appliedSnpFilter, setAppliedSnpFilter] = useState<string[]>([]);
 
   let partiallyFilteredEnrichments = [...enrichments.entries()];
-  if (snpFilters.length !== 0) {
+  if (appliedSnpFilter.length !== 0) {
     partiallyFilteredEnrichments = partiallyFilteredEnrichments.filter(
-      (value) => snpFilters.includes(value[0])
+      (value) => appliedSnpFilter.includes(value[0])
     );
   }
 
   let enrichmentsToUse: Array<Array<string | Array<Array<string | number>>>>;
-  if (tissueFilters.length !== 0) {
+  if (appliedTissueFilter.length !== 0) {
     enrichmentsToUse = partiallyFilteredEnrichments.map((enrichments) => [
       enrichments[0],
       [...enrichments[1].entries()].filter((value) =>
-        tissueFilters.includes(value[0])
+        appliedTissueFilter.includes(value[0])
       ),
     ]);
   } else {
@@ -43,8 +34,6 @@ const EnrichmentHeatmap = ({ enrichments }: Props) => {
       [...enrichments[1].entries()],
     ]);
   }
-
-  // console.log(enrichmentsToUse);
 
   const tissueEnrichments: Map<string, number> = new Map();
   const snpEnrichments: Map<string, number> = new Map();
@@ -68,30 +57,39 @@ const EnrichmentHeatmap = ({ enrichments }: Props) => {
     (a, b) => b[1] - a[1]
   );
 
-  console.log(snpRanking);
-  console.log(tissueRanking);
-
   const handleSnpSelect = (e: string) => {
-    if (snpFilters.includes(e)) {
-      setSnpFilters(snpFilters.filter((value) => value != e));
+    if (snpFilter.includes(e)) {
+      setSnpFilter(snpFilter.filter((value) => value != e));
     } else {
-      setSnpFilters([...snpFilters, e]);
+      setSnpFilter([...snpFilter, e]);
     }
   };
 
   const handleTissueSelect = (e: string) => {
-    if (tissueFilters.includes(e)) {
-      setTissueFilters(tissueFilters.filter((value) => value != e));
+    if (tissueFilter.includes(e)) {
+      setTissueFilter(tissueFilter.filter((value) => value != e));
     } else {
-      setTissueFilters([...tissueFilters, e]);
+      setTissueFilter([...tissueFilter, e]);
     }
+  };
+
+  const handleApply = () => {
+    setAppliedTissueFilter(tissueFilter);
+    setAppliedSnpFilter(snpFilter);
+  };
+
+  const handleReset = () => {
+    setTissueFilter([]);
+    setSnpFilter([]);
+    setAppliedTissueFilter([]);
+    setAppliedSnpFilter([]);
   };
 
   return (
     <div>
       <Grid
-        templateAreas={`"gap header"
-                  "nav main"`}
+        templateAreas={`"settings tissues"
+                  "snps distance"`}
         gridTemplateRows={"150px 1fr"}
         gridTemplateColumns={"150px 1fr"}
         h="500px"
@@ -99,21 +97,45 @@ const EnrichmentHeatmap = ({ enrichments }: Props) => {
         color="blackAlpha.700"
         fontWeight="bold"
       >
-        <GridItem pl="2" bg="orange.300" area={"header"}>
+        <GridItem
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            flexDirection: "column",
+          }}
+          pl="2"
+          area={"settings"}
+        >
+          <Button
+            bgColor="red.100"
+            onClick={() => handleReset()}
+            marginTop="10px"
+          >
+            Reset Filters
+          </Button>
+          <Button
+            bgColor="blue.100"
+            onClick={() => handleApply()}
+            marginTop="10px"
+          >
+            Apply Filters
+          </Button>
+        </GridItem>
+        <GridItem pl="2" bg="orange.300" area={"tissues"}>
           <HeatmapRowHeader
             tissueEnrichmentPair={tissueRanking}
             selectCheckbox={handleTissueSelect}
-            selectedCheckboxes={tissueFilters}
+            selectedCheckboxes={tissueFilter}
           />
         </GridItem>
-        <GridItem pl="2" bg="pink.300" area={"nav"}>
+        <GridItem pl="2" bg="pink.300" area={"snps"}>
           <HeatmapColHeader
             snpEnrichmentPair={snpRanking}
             selectCheckbox={handleSnpSelect}
-            selectedCheckboxes={snpFilters}
+            selectedCheckboxes={snpFilter}
           />
         </GridItem>
-        <GridItem pl="2" bg="green.300" area={"main"}></GridItem>
+        <GridItem pl="2" bg="green.300" area={"distance"}></GridItem>
       </Grid>
     </div>
   );
