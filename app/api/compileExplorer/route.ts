@@ -15,8 +15,10 @@ interface enhancerInfo {
   start: any;
   end: any;
   tissue_id: any;
+  tissue_name: any;
 }
 
+const MAX_DIST = 3000;
 const MAX_INTERVAL: number = 10000000;
 const MAX_QUERY: number = 10000;
 const CHR_RANGE_PARSER: RegExp =
@@ -116,6 +118,9 @@ export async function GET(request: NextRequest) {
 
   const flatSnps = snps.flat();
 
+  const tissueNameMap: Map<string, string> = new Map();
+  const snpNameMap: Map<string, string> = new Map();
+
   try {
     const snpPositions: { chr: any; pos: any; id: any }[] =
       await prisma.snp_v2.findMany({
@@ -132,14 +137,15 @@ export async function GET(request: NextRequest) {
     const allEnhancerPromises = [];
     for (const snp of snpPositions) {
       // for all snps that are of interest
+      snpNameMap.set(snp.id, snp.chr + "_" + snp.pos);
       const chrNumName = "chr" + snp.chr;
       const snpEnhancers = prisma.bss.findMany({
-        select: { start: true, end: true, tissue_id: true },
+        select: { start: true, end: true, tissue_id: true, tissue_name: true },
         where: {
           AND: [
             { chr: chrNumName },
-            { start: { gte: snp.pos - 2500 } },
-            { end: { lte: snp.pos + 2500 } },
+            { start: { gte: snp.pos - MAX_DIST } },
+            { end: { lte: snp.pos + MAX_DIST } },
           ],
         },
       });
@@ -155,11 +161,14 @@ export async function GET(request: NextRequest) {
     // console.log(allEnhancers);
 
     const allEnrichments: Map<string, Map<string, number>> = new Map();
+    const closestEnhancers: Map<string, Map<string, number>> = new Map();
     for (const pair of snpEnhancerPairs) {
       const snp: snpInfo = pair[0] as snpInfo;
       const enhancers: enhancerInfo[] = pair[1] as enhancerInfo[];
       const snpEnrichment: Map<string, number> = new Map();
+      const snpEnhProximity: Map<string, number> = new Map();
       for (const enhancer of enhancers) {
+        tissueNameMap.set(enhancer.tissue_id, enhancer.tissue_name);
         const enrichmentStats = enrichment(
           snp.pos,
           enhancer.start!,
@@ -171,18 +180,31 @@ export async function GET(request: NextRequest) {
           enhancer.tissue_id,
           enrichmentValue + (snpEnrichment.get(enhancer.tissue_id) ?? 0)
         );
+        snpEnhProximity.set(
+          enhancer.tissue_id,
+          Math.min(
+            nearestEnhancer,
+            snpEnhProximity.get(enhancer.tissue_id) ?? MAX_DIST + 1
+          )
+        );
       }
       allEnrichments.set(snp.id, snpEnrichment);
+      closestEnhancers.set(snp.id, snpEnhProximity);
     }
 
-    // add alternate querying strategy
     // console.log(allEnrichments);
+    // console.log(closestEnhancers);
+    // console.log(tissueNameMap);
+    // console.log(snpNameMap);
 
     return NextResponse.json({
       input: input,
       success: {
         snps: snps,
         enrichments: mapToObjectRec(allEnrichments),
+        closestEnhancers: mapToObjectRec(closestEnhancers),
+        tissueNameMap: mapToObjectRec(tissueNameMap),
+        snpNameMap: mapToObjectRec(snpNameMap),
       },
     });
   } catch (error) {

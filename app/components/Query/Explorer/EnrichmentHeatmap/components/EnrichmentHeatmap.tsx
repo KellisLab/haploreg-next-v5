@@ -1,13 +1,17 @@
 import { Button, Grid, GridItem } from "@chakra-ui/react";
 import { useState } from "react";
-import HeatmapColHeader from "./HeatmapColHeader";
-import HeatmapRowHeader from "./HeatmapRowHeader";
+import HeatmapColHeader from "./components/HeatmapColHeader";
+import HeatmapRowHeader from "./components/HeatmapRowHeader";
+import ClosestEnhancerTable from "./components/ClosestEnhancerTable";
+import { EnrichmentDataType } from "../../hooks/useHaploBlockEnrichment";
 
 interface Props {
-  enrichments: Map<string, Map<string, number>>;
+  enrichmentData: EnrichmentDataType;
 }
 
-const EnrichmentHeatmap = ({ enrichments }: Props) => {
+const EnrichmentHeatmap = ({
+  enrichmentData: { enrichments, closestEnhancers, tissueNameMap, snpNameMap },
+}: Props) => {
   const [tissueFilter, setTissueFilter] = useState<string[]>([]);
   const [snpFilter, setSnpFilter] = useState<string[]>([]);
   const [appliedTissueFilter, setAppliedTissueFilter] = useState<string[]>([]);
@@ -133,9 +137,16 @@ const EnrichmentHeatmap = ({ enrichments }: Props) => {
             snpEnrichmentPair={snpRanking}
             selectCheckbox={handleSnpSelect}
             selectedCheckboxes={snpFilter}
+            snpNameMap={snpNameMap}
           />
         </GridItem>
-        <GridItem pl="2" bg="green.300" area={"distance"}></GridItem>
+        <GridItem pl="2" bg="green.300" area={"distance"}>
+          <ClosestEnhancerTable
+            snpRanking={snpRanking}
+            tissueRanking={tissueRanking}
+            closestEnhancers={closestEnhancers}
+          />
+        </GridItem>
       </Grid>
     </div>
   );

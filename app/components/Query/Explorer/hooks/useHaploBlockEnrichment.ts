@@ -3,9 +3,12 @@ import { InputOptions } from "../../Input/dataManagement/inputReducer";
 import objectToMap from "@/app/api/compileExplorer/helpers/objectToMap";
 
 export interface EnrichmentDataType {
+  isCELoading: boolean;
   snps: string[];
   enrichments: Map<string, Map<string, number>>;
-  isCELoading: boolean;
+  closestEnhancers: Map<string, Map<string, number>>;
+  tissueNameMap: Map<string, string>;
+  snpNameMap: Map<string, string>;
 }
 
 // const useHaploBlockEnhancement = (snps: string[]) => {
@@ -20,10 +23,14 @@ const useHaploBlockEnrichment = (inputOptions: InputOptions) => {
     url.searchParams.append("input", JSON.stringify(inputOptions));
     const response = await fetch(url);
     const outputJson = await response.json();
+    console.log(outputJson);
     setEnrichmentData({
       isCELoading: false,
       snps: outputJson.success.snps,
       enrichments: objectToMap(outputJson.success.enrichments),
+      closestEnhancers: objectToMap(outputJson.success.closestEnhancers),
+      tissueNameMap: objectToMap(outputJson.success.tissueNameMap),
+      snpNameMap: objectToMap(outputJson.success.snpNameMap),
     });
   };
 

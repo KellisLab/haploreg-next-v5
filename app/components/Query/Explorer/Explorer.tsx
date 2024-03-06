@@ -1,9 +1,7 @@
 import React from "react";
 import { RegionTableType } from "../Table/hooks/useHaploRegTableData";
 import { EnrichmentDataType } from "./hooks/useHaploBlockEnrichment";
-import EnrichmentTable from "./components/EnrichmentTable";
-import { Spinner } from "@chakra-ui/react";
-import EnrichmentHeatmap from "./components/EnrichmentHeatmap";
+import EnrichmentHeatmap from "./EnrichmentHeatmap/components/EnrichmentHeatmap";
 import { Text } from "@chakra-ui/react";
 
 interface Props {
@@ -13,21 +11,21 @@ interface Props {
 
 const Explorer = ({
   tableData: { isCTLoading, input, headers, regionTableData, regionTableError },
-  enrichmentData: { isCELoading, snps, enrichments },
+  enrichmentData,
 }: Props) => {
   // if (isCELoading || isCTLoading) return null;
-  if (!enrichments || !headers) return null;
+  if (!enrichmentData.enrichments || !headers) return null;
   // console.log(enrichments);
 
   return (
     <div className="m-5 ">
-      {snps.map((value, index) => (
+      {enrichmentData.snps.map((value, index) => (
         <div key={index}>
           <Text fontSize="xs">{value}</Text>
         </div>
       ))}
       <div className="p-5 rounded-md bg-slate-200">
-        <EnrichmentHeatmap enrichments={enrichments} />
+        <EnrichmentHeatmap enrichmentData={enrichmentData} />
       </div>
     </div>
   );
