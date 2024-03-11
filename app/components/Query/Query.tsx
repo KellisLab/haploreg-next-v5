@@ -28,6 +28,7 @@ const Query = () => {
     inputType: "query",
     outputType: "html",
     queryType: QueryType.Unknown,
+    proximityLimit: 3000,
   });
 
   const { regionTable, queryTable } = useHaploRegTableData(inputOptions);
@@ -35,21 +36,28 @@ const Query = () => {
   const { enrichmentData, queryEnrichments } =
     useHaploBlockEnhancement(inputOptions);
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleMainSubmit = (event: FormEvent) => {
     event.preventDefault();
     queryTable();
+    queryEnrichments();
+  };
+
+  const handleExplorerSubmit = () => {
     queryEnrichments();
   };
 
   return (
     <>
       <InputContext.Provider value={{ inputOptions, dispatch }}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleMainSubmit}>
           <InputArea />
           <Button type="submit">Submit</Button>
         </form>
         {enrichmentData ? (
-          <Explorer tableData={regionTable} enrichmentData={enrichmentData} />
+          <Explorer
+            enrichmentData={enrichmentData}
+            explorerSubmit={() => handleExplorerSubmit()}
+          />
         ) : null}
         {/* <Suspense fallback={<DNALoadingSpinner />}> It would be nice to make this server side at some point*/}
         <HaploRegTable regionTable={regionTable} />

@@ -135,6 +135,7 @@ export async function GET(request: NextRequest) {
     // SELECT chr, pos, id from snp_v2 WHERE id IN ('rs10', 'rs15', 'rs20', 'rs28716236') ORDER BY chr, pos
 
     const allEnhancerPromises = [];
+    const max_dist = input.proximityLimit;
     for (const snp of snpPositions) {
       // for all snps that are of interest
       snpNameMap.set(snp.id, snp.chr + "_" + snp.pos);
@@ -144,8 +145,8 @@ export async function GET(request: NextRequest) {
         where: {
           AND: [
             { chr: chrNumName },
-            { start: { gte: snp.pos - MAX_DIST } },
-            { end: { lte: snp.pos + MAX_DIST } },
+            { start: { gte: snp.pos - max_dist } },
+            { end: { lte: snp.pos + max_dist } },
           ],
         },
       });
@@ -184,7 +185,7 @@ export async function GET(request: NextRequest) {
           enhancer.tissue_id,
           Math.min(
             nearestEnhancer,
-            snpEnhProximity.get(enhancer.tissue_id) ?? MAX_DIST + 1
+            snpEnhProximity.get(enhancer.tissue_id) ?? max_dist + 1
           )
         );
       }

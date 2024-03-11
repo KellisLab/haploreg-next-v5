@@ -14,6 +14,7 @@ export enum InputFields {
   inputType,
   outputType,
   queryType,
+  proximityLimit,
 }
 
 export interface InputOptions {
@@ -30,6 +31,7 @@ export interface InputOptions {
   inputType: "query" | "file" | "gwas";
   outputType: "html" | "text";
   queryType: QueryType;
+  proximityLimit: number;
 }
 
 interface ChangeNum {
@@ -87,6 +89,8 @@ const inputReducer = (
         return { ...inputOptions, condenseLists: action.value };
       case InputFields.condenseOligos:
         return { ...inputOptions, condenseOligos: action.value };
+      case InputFields.proximityLimit:
+        return { ...inputOptions, proximityLimit: action.value };
     }
   } else if (action.type === "TYP") {
     switch (action.field) {
