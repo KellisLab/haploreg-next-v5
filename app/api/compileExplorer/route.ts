@@ -4,6 +4,7 @@ import enrichment from "./helpers/enrichment";
 import { InputOptions } from "@/app/components/Query/Input/dataManagement/inputReducer";
 import QueryType from "@/app/types/QueryType";
 import mapToObjectRec from "./helpers/mapToObjectRec";
+import { StreamEffects } from "@/app/components/Query/Explorer/hooks/useHaploBlockEnrichment";
 
 interface snpInfo {
   chr: any;
@@ -118,13 +119,14 @@ export async function GET(request: NextRequest) {
 
   const flatSnps = snps.flat();
 
+  const streamEffects: Map<string, StreamEffects> = new Map();
   const tissueNameMap: Map<string, string> = new Map();
   const snpNameMap: Map<string, string> = new Map();
 
   try {
-    const snpPositions: { chr: any; pos: any; id: any }[] =
+    const snpPositions: { chr: any; pos: any; id: any; motifs: any }[] =
       await prisma.snp_v2.findMany({
-        select: { chr: true, pos: true, id: true },
+        select: { chr: true, pos: true, id: true, motifs: true },
         where: {
           id: {
             in: flatSnps,
@@ -137,6 +139,11 @@ export async function GET(request: NextRequest) {
     const allEnhancerPromises = [];
     const max_dist = input.proximityLimit;
     for (const snp of snpPositions) {
+      streamEffects.set(snp.id, {
+        motifs: snp.motifs
+          .split(";")
+          .map((item: string, index: number) => item.split(",")[0]),
+      });
       // for all snps that are of interest
       snpNameMap.set(snp.id, snp.chr + "_" + snp.pos);
       const chrNumName = "chr" + snp.chr;
@@ -201,7 +208,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       input: input,
       success: {
-        snps: snps,
+        streamEffects: mapToObjectRec(streamEffects),
         enrichments: mapToObjectRec(allEnrichments),
         closestEnhancers: mapToObjectRec(closestEnhancers),
         tissueNameMap: mapToObjectRec(tissueNameMap),

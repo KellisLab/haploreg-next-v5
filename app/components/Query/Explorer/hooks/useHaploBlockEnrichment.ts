@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { InputOptions } from "../../Input/dataManagement/inputReducer";
 import objectToMap from "@/app/api/compileExplorer/helpers/objectToMap";
+import objectToFlatMap from "@/app/api/compileExplorer/helpers/objectToFlatMap";
+
+export interface StreamEffects {
+  motifs: string[];
+}
 
 export interface EnrichmentDataType {
   isCELoading: boolean;
-  snps: string[];
+  streamEffects: Map<string, StreamEffects>;
   enrichments: Map<string, Map<string, number>>;
   closestEnhancers: Map<string, Map<string, number>>;
   tissueNameMap: Map<string, string>;
@@ -26,7 +31,7 @@ const useHaploBlockEnrichment = (inputOptions: InputOptions) => {
     console.log(outputJson);
     setEnrichmentData({
       isCELoading: false,
-      snps: outputJson.success.snps,
+      streamEffects: objectToFlatMap(outputJson.success.streamEffects),
       enrichments: objectToMap(outputJson.success.enrichments),
       closestEnhancers: objectToMap(outputJson.success.closestEnhancers),
       tissueNameMap: objectToMap(outputJson.success.tissueNameMap),

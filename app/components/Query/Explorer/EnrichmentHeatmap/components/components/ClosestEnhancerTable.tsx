@@ -1,22 +1,18 @@
 import React from "react";
+import { Rankings } from "../EnrichmentHeatmap";
 
 interface Props {
-  snpRanking: [string, number][];
-  tissueRanking: [string, number][];
+  rankings: Rankings;
   closestEnhancers: Map<string, Map<string, number>>;
 }
 
-const ClosestEnhancerTable = ({
-  snpRanking,
-  tissueRanking,
-  closestEnhancers,
-}: Props) => {
+const ClosestEnhancerTable = ({ rankings, closestEnhancers }: Props) => {
   return (
     <table className="table-auto w-full text-sm text-left text-gray-600 mt-2 border-separate border-spacing-0">
       <tbody>
-        {snpRanking.map((snpElement, snpIndex) => (
+        {rankings.snpRanking.map((snpElement, snpIndex) => (
           <tr key={snpIndex}>
-            {tissueRanking.map((tissueElement, tissueIndex) => (
+            {rankings.tissueRanking.map((tissueElement, tissueIndex) => (
               <td key={tissueIndex}>
                 {closestEnhancers.get(snpElement[0])?.get(tissueElement[0])}
               </td>
