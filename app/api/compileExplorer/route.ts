@@ -5,6 +5,7 @@ import { InputOptions } from "@/app/components/Query/Input/dataManagement/inputR
 import QueryType from "@/app/types/QueryType";
 import mapToObjectRec from "./helpers/mapToObjectRec";
 import { StreamEffects } from "@/app/components/Query/Explorer/hooks/useHaploBlockEnrichment";
+import { PrefixPathnameNormalizer } from "next/dist/server/future/normalizers/request/prefix";
 
 interface snpInfo {
   chr: any;
@@ -19,6 +20,14 @@ interface enhancerInfo {
   tissue_name: any;
 }
 
+prisma.$on("query", (e) => {
+  QUERY_TIME += e.duration;
+  //   console.log('Query: ' + e.query);
+  //   console.log('Params: ' + e.params);
+  //   console.log('Duration: ' + e.duration + 'ms');
+});
+
+let QUERY_TIME: number = 0;
 const MAX_DIST = 3000;
 const MAX_INTERVAL: number = 10000000;
 const MAX_QUERY: number = 10000;
@@ -26,6 +35,10 @@ const CHR_RANGE_PARSER: RegExp =
   /^chr(?<chr>\d+):(?<startPos>\d+)-(?<endPos>\d+)/;
 
 export async function GET(request: NextRequest) {
+  QUERY_TIME = 0;
+  const start = performance.now();
+  console.log("start compileExplorer");
+
   const searchParams = request.nextUrl.searchParams;
   const input = JSON.parse(searchParams.get("input")!) as InputOptions;
 
@@ -117,6 +130,10 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  const first = performance.now();
+  const firstTime = first - start;
+  console.log(`compileExplorer to end first prisma: ${firstTime} milliseconds`);
+
   const flatSnps = snps.flat();
 
   const streamEffects: Map<string, StreamEffects> = new Map();
@@ -135,6 +152,12 @@ export async function GET(request: NextRequest) {
         orderBy: [{ chr: "asc" }, { pos: "asc" }],
       });
     // SELECT chr, pos, id from snp_v2 WHERE id IN ('rs10', 'rs15', 'rs20', 'rs28716236') ORDER BY chr, pos
+
+    const second = performance.now();
+    const secondTime = second - start;
+    console.log(
+      `compileExplorer to end second prisma: ${secondTime} milliseconds`
+    );
 
     const allEnhancerPromises = [];
     const max_dist = input.proximityLimit;
@@ -160,11 +183,19 @@ export async function GET(request: NextRequest) {
       allEnhancerPromises.push(snpEnhancers);
     }
 
+    console.log("waiting on queries to return");
+
     const allEnhancers = await Promise.all(allEnhancerPromises);
     const snpEnhancerPairs = snpPositions.map((obj, index) => [
       obj,
       allEnhancers[index],
     ]);
+
+    const third = performance.now();
+    const thirdTime = third - start;
+    console.log(
+      `compileExplorer to end third prisma: ${thirdTime} milliseconds`
+    );
 
     // console.log(allEnhancers);
 
@@ -204,6 +235,15 @@ export async function GET(request: NextRequest) {
     // console.log(closestEnhancers);
     // console.log(tissueNameMap);
     // console.log(snpNameMap);
+
+    const end = performance.now();
+    const executionTime = end - start;
+    console.log("---");
+    console.log(
+      `compileExplorer execution time: ${executionTime} milliseconds`
+    );
+    console.log(`compileExplorer query time: ${QUERY_TIME} milliseconds`);
+    console.log("---");
 
     return NextResponse.json({
       input: input,
