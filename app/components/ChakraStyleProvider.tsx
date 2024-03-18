@@ -1,7 +1,6 @@
 "use client";
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
-import type { StyleFunctionProps } from "@chakra-ui/styled-system";
 import { ReactNode } from "react";
 
 const theme = extendTheme({

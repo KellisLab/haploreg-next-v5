@@ -1,17 +1,10 @@
-import React, { useContext, useState, useRef } from "react";
-import { EnrichmentDataType } from "./hooks/useHaploBlockEnrichment";
-import EnrichmentHeatmap from "./EnrichmentHeatmap/components/EnrichmentHeatmap";
-import {
-  HStack,
-  Input,
-  Button,
-  NumberInput,
-  NumberInputField,
-} from "@chakra-ui/react";
-import InputContext from "../Input/dataManagement/inputContext";
-import { InputFields } from "../Input/dataManagement/inputReducer";
-import StreamEffectsTable from "./EnrichmentHeatmap/components/components/StreamEffectsTable";
+import { Flex, HStack } from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import DNALoadingSpinner from "../../Loader/DNALoadingSpinner";
+import ControlPanel from "./EnrichmentHeatmap/components/ControlPanel";
+import EnrichmentHeatmap from "./EnrichmentHeatmap/components/EnrichmentHeatmap";
+import StreamEffectsTable from "./EnrichmentHeatmap/components/StreamEffectsTable";
+import { EnrichmentDataType } from "./hooks/useHaploBlockEnrichment";
 
 export interface StreamEffectsRef {
   handleAdd: () => void;
@@ -23,7 +16,6 @@ interface Props {
 }
 
 const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
-  const { inputOptions, dispatch } = useContext(InputContext);
   const saveStreamEffectsRef = useRef<StreamEffectsRef | null>(null);
   const [streamEffectName, setStreamEffectName] = useState("");
 
@@ -54,6 +46,7 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
       ),
     ]);
   } else {
+    // if nothing is selected, then just show everything (but still need to convery type)
     enrichmentsToUse = partiallyFilteredEnrichments.map((enrichments) => [
       enrichments[0],
       [...enrichments[1].entries()],
@@ -79,10 +72,10 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
 
   const snpRanking = [...snpEnrichments.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 7);
+    .slice(0, 7); // take top 7 snps for now
   const tissueRanking = [...tissueEnrichments.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 15);
+    .slice(0, 10); // top 15 tissues
 
   const handleTissueSelect = (e: string) => {
     if (tissueFilter.includes(e)) {
@@ -101,7 +94,6 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
   };
 
   const handleApply = () => {
-    console.log("applied");
     setAppliedTissueFilter(tissueFilter);
     setAppliedSnpFilter(snpFilter);
   };
@@ -120,61 +112,31 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
           <Text fontSize="xs">{value}</Text>
         </div>
       ))} */}
-      <div className="pt-5 pb-5 h-500 rounded-md bg-slate-200">
-        <div>
-          <HStack className="bg-slate-100 p-2 m-5">
-            <NumberInput
-              value={inputOptions.proximityLimit}
-              onChange={(value) =>
-                dispatch({
-                  type: "NUM",
-                  field: InputFields.proximityLimit,
-                  value: Number(value),
-                })
-              }
-            >
-              <NumberInputField />
-            </NumberInput>
-            <Button bgColor="orange.100" onClick={() => explorerSubmit()}>
-              Apply Enh Prox
-            </Button>
-            <Button bgColor="red.100" onClick={() => handleReset()}>
-              Reset Filters
-            </Button>
-            <Button bgColor="blue.100" onClick={() => handleApply()}>
-              Apply Filters
-            </Button>
-            <Button bgColor="blue.100" onClick={() => handleApply()}>
-              Apply Filters
-            </Button>
-            <Button
-              bgColor="green.100"
-              onClick={() => saveStreamEffectsRef.current?.handleAdd()}
-            >
-              Save Data
-            </Button>
-            <Input
-              value={streamEffectName}
-              onChange={(event) => setStreamEffectName(event.target.value)}
-              htmlSize={4}
-              width="auto"
-            />
-          </HStack>
-        </div>
-        <EnrichmentHeatmap
-          enrichmentData={enrichmentData}
-          tissueFilter={tissueFilter}
-          snpFilter={snpFilter}
-          rankings={{ tissueRanking: tissueRanking, snpRanking: snpRanking }}
-          tissueSelect={(e) => handleTissueSelect(e)}
-          snpSelect={(e) => handleSnpSelect(e)}
-        />
-        <StreamEffectsTable
-          snpRanking={snpRanking}
-          streamEffects={enrichmentData.streamEffects}
+      <div className="p-5 h-500 rounded-md bg-slate-400">
+        <ControlPanel
+          explorerSubmit={() => explorerSubmit()}
+          handleReset={() => handleReset()}
+          handleApply={() => handleApply()}
+          setStreamEffectName={(e) => setStreamEffectName(e)}
           streamEffectName={streamEffectName}
-          ref={saveStreamEffectsRef}
+          saveStreamEffectsRef={saveStreamEffectsRef}
         />
+        <div className="flex flex-row mt-5 gap-4 ">
+          <EnrichmentHeatmap
+            enrichmentData={enrichmentData}
+            tissueFilter={tissueFilter}
+            snpFilter={snpFilter}
+            rankings={{ tissueRanking: tissueRanking, snpRanking: snpRanking }}
+            tissueSelect={(e) => handleTissueSelect(e)}
+            snpSelect={(e) => handleSnpSelect(e)}
+          />
+          <StreamEffectsTable
+            snpRanking={snpRanking}
+            streamEffects={enrichmentData.streamEffects}
+            streamEffectName={streamEffectName}
+            ref={saveStreamEffectsRef}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState, forwardRef, useRef, useImperativeHandle } from "react";
-import { StreamEffects } from "../../../hooks/useHaploBlockEnrichment";
-import { Rankings } from "../EnrichmentHeatmap";
+import { StreamEffects } from "../../hooks/useHaploBlockEnrichment";
+import { Rankings } from "./EnrichmentHeatmap";
 import {
   CloseButton,
   HStack,
@@ -10,7 +10,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { StreamEffectsRef } from "../../../Explorer";
+import { StreamEffectsRef } from "../../Explorer";
 
 interface Props {
   snpRanking: [string, number][];
@@ -46,7 +46,7 @@ const StreamEffectsTable = forwardRef<StreamEffectsRef, Props>(
     };
 
     return (
-      <div>
+      <div className="basis-1/2">
         <Tabs variant="enclosed">
           <TabList>
             {savedStreamEffects.map((data, index) => (

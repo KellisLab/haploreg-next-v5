@@ -32,9 +32,13 @@ const HeatmapColHeader = ({
                 size="sm"
                 onChange={(e) => selectCheckbox(e.target.value)}
               />
-              <Text fontSize="sm">{snpNameMap.get(pair[0] as string)}</Text>
+              <p className="oldstyle-nums text-[12px]">
+                {snpNameMap.get(pair[0] as string)}
+              </p>
             </HStack>
-            <Box fontSize="xs">{Number(pair[1]).toPrecision(5)}</Box>
+            <p className="oldstyle-nums text-[11px]">
+              {Number(pair[1]).toPrecision(5)}
+            </p>
           </div>
         ))}
       </div>

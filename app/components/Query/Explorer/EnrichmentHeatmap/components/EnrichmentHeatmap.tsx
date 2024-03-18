@@ -1,4 +1,4 @@
-import { Button, Grid, GridItem, HStack } from "@chakra-ui/react";
+import { Button, Flex, Grid, GridItem, HStack } from "@chakra-ui/react";
 import HeatmapColHeader from "./components/HeatmapColHeader";
 import HeatmapRowHeader from "./components/HeatmapRowHeader";
 import ClosestEnhancerTable from "./components/ClosestEnhancerTable";
@@ -34,7 +34,7 @@ const EnrichmentHeatmap = ({
 }: Props) => {
   if (!enrichments || isCELoading) return null;
   return (
-    <div>
+    <div className="basis-1/2">
       <Grid
         templateAreas={`"settings tissues"
                   "snps distance"`}
