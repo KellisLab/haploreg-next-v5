@@ -31,7 +31,7 @@ const ControlPanel = ({
 
   return (
     <div>
-      <HStack className="bg-slate-100 p-2 rounded-lg">
+      <HStack className="border border-gray bg-white p-2 rounded-lg">
         <NumberInput
           value={inputOptions.proximityLimit}
           onChange={(value) =>

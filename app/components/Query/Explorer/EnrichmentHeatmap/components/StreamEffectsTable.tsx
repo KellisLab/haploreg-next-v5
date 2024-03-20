@@ -1,6 +1,3 @@
-import { useState, forwardRef, useRef, useImperativeHandle } from "react";
-import { StreamEffects } from "../../hooks/useHaploBlockEnrichment";
-import { Rankings } from "./EnrichmentHeatmap";
 import {
   CloseButton,
   HStack,
@@ -10,7 +7,9 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { StreamEffectsRef } from "../../Explorer";
+import { StreamEffects } from "../../hooks/useHaploBlockEnrichment";
 
 interface Props {
   snpRanking: [string, number][];
@@ -18,22 +17,21 @@ interface Props {
   streamEffectName: string;
 }
 
+let count = 1;
+
 const StreamEffectsTable = forwardRef<StreamEffectsRef, Props>(
   ({ snpRanking, streamEffects, streamEffectName }: Props, ref) => {
     const [savedStreamEffects, setSavedStreamEffects] = useState<
       [string, [string, number][]][]
     >([["default", snpRanking]]);
 
-    // console.log(rankings);
-    // console.log(streamEffects);
-    // console.log(rankings.snpRanking[0][0]);
-    // console.log(streamEffects.get(rankings.snpRanking[0][0]));
     useImperativeHandle(ref, () => ({
       handleAdd() {
         setSavedStreamEffects([
           ...savedStreamEffects,
-          [streamEffectName, snpRanking],
+          [streamEffectName ? streamEffectName : String(count), snpRanking],
         ]);
+        count++;
         console.log(savedStreamEffects);
       },
     }));
@@ -46,7 +44,7 @@ const StreamEffectsTable = forwardRef<StreamEffectsRef, Props>(
     };
 
     return (
-      <div className="basis-1/2">
+      <div className="basis-1/2 overflow-scroll">
         <Tabs variant="enclosed">
           <TabList>
             {savedStreamEffects.map((data, index) => (

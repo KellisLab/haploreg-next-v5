@@ -18,11 +18,7 @@ const HeatmapColHeader = ({
 
   return (
     <>
-      <div
-        style={{
-          marginTop: "5px",
-        }}
-      >
+      <div className="pl-5">
         {snpEnrichmentPair.map((pair, index) => (
           <div key={index}>
             <HStack>
@@ -32,11 +28,9 @@ const HeatmapColHeader = ({
                 size="sm"
                 onChange={(e) => selectCheckbox(e.target.value)}
               />
-              <p className="oldstyle-nums text-[12px]">
-                {snpNameMap.get(pair[0] as string)}
-              </p>
+              <p className="text-[12px]">{snpNameMap.get(pair[0] as string)}</p>
             </HStack>
-            <p className="oldstyle-nums text-[11px]">
+            <p className="font-normal text-[11px]">
               {Number(pair[1]).toPrecision(5)}
             </p>
           </div>

@@ -5,12 +5,14 @@ interface Props {
   tissueEnrichmentPair: Array<Array<string | number>>;
   selectCheckbox: any;
   selectedCheckboxes: string[];
+  tissueNameMap: Map<string, string>;
 }
 
 const HeatmapRowHeader = ({
   tissueEnrichmentPair,
   selectCheckbox,
   selectedCheckboxes,
+  tissueNameMap,
 }: Props) => {
   if (tissueEnrichmentPair.length === 0) return null;
 
@@ -19,14 +21,11 @@ const HeatmapRowHeader = ({
       <div
         style={{
           transform: "rotate(-90deg)",
-          // transformOrigin: "left",
-          // marginLeft: "5px",
           marginTop: "140px",
           transformOrigin: "top left",
-          // transformOrigin: "bottom",
           width: "150px",
         }}
-        className="overflow-clip"
+        className="pt-1"
       >
         {tissueEnrichmentPair.map((pair, index) => (
           <div key={index}>
@@ -38,9 +37,11 @@ const HeatmapRowHeader = ({
                 size="sm"
                 onChange={(e) => selectCheckbox(e.target.value)}
               />
-              <p className="oldstyle-nums text-[12px]">{pair[0]}</p>
+              <p className="text-[12px]">
+                {tissueNameMap.get(pair[0] as string)}
+              </p>
             </HStack>
-            <p className="oldstyle-nums text-[11px]">
+            <p className="font-normal text-[12px]">
               {Number(pair[1]).toPrecision(5)}
             </p>
           </div>

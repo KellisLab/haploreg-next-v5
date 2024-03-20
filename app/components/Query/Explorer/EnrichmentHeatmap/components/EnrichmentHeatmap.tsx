@@ -34,14 +34,13 @@ const EnrichmentHeatmap = ({
 }: Props) => {
   if (!enrichments || isCELoading) return null;
   return (
-    <div className="basis-1/2">
+    <div className="basis-1/2 overflow-scroll">
       <Grid
         templateAreas={`"settings tissues"
                   "snps distance"`}
         gridTemplateRows={"150px 1fr"}
         gridTemplateColumns={"150px 1fr"}
         h="500px"
-        gap="2"
         color="blackAlpha.700"
         fontWeight="bold"
       >
@@ -51,17 +50,17 @@ const EnrichmentHeatmap = ({
             justifyContent: "flex-end",
             flexDirection: "column",
           }}
-          pl="2"
           area={"settings"}
         ></GridItem>
-        <GridItem pl="2" bg="orange.300" area={"tissues"}>
+        <GridItem area={"tissues"}>
           <HeatmapRowHeader
             tissueEnrichmentPair={rankings.tissueRanking}
             selectCheckbox={tissueSelect}
             selectedCheckboxes={tissueFilter}
+            tissueNameMap={tissueNameMap}
           />
         </GridItem>
-        <GridItem pl="2" bg="pink.300" area={"snps"}>
+        <GridItem pl="2" area={"snps"}>
           <HeatmapColHeader
             snpEnrichmentPair={rankings.snpRanking}
             selectCheckbox={snpSelect}
@@ -69,7 +68,7 @@ const EnrichmentHeatmap = ({
             snpNameMap={snpNameMap}
           />
         </GridItem>
-        <GridItem pl="2" bg="green.300" area={"distance"}>
+        <GridItem area={"distance"}>
           <ClosestEnhancerTable
             rankings={rankings}
             closestEnhancers={closestEnhancers}

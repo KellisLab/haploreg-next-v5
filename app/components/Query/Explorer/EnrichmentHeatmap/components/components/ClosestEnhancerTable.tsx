@@ -8,27 +8,50 @@ interface Props {
 
 const ClosestEnhancerTable = ({ rankings, closestEnhancers }: Props) => {
   return (
-    <table className="table-fixed text-[10px] text-center border-collapse">
-      <thead></thead>
-      <tbody>
-        <tr>
+    <div className="divide-y divide-black border-t border-l border-black">
+      {rankings.snpRanking.map((snpElement, snpIndex) => (
+        <div className="divide-x divide-black flex flex-row " key={snpIndex}>
           {rankings.tissueRanking.map((tissueElement, tissueIndex) => (
-            <td className="border px-3.5 py-2" key={tissueIndex}>
-              {0}
-            </td>
-          ))}
-        </tr>
-        {rankings.snpRanking.map((snpElement, snpIndex) => (
-          <tr key={snpIndex}>
-            {rankings.tissueRanking.map((tissueElement, tissueIndex) => (
-              <td className="border px-.8 py-2" key={tissueIndex}>
+            <div
+              className={`w-9 py-2 ${
+                closestEnhancers.get(snpElement[0])?.get(tissueElement[0])
+                  ? closestEnhancers
+                      .get(snpElement[0])
+                      ?.get(tissueElement[0])! > 100
+                    ? closestEnhancers
+                        .get(snpElement[0])
+                        ?.get(tissueElement[0])! > 300
+                      ? closestEnhancers
+                          .get(snpElement[0])
+                          ?.get(tissueElement[0])! > 600
+                        ? closestEnhancers
+                            .get(snpElement[0])
+                            ?.get(tissueElement[0])! > 1000
+                          ? closestEnhancers
+                              .get(snpElement[0])
+                              ?.get(tissueElement[0])! > 1500
+                            ? closestEnhancers
+                                .get(snpElement[0])
+                                ?.get(tissueElement[0])! > 3000
+                              ? ""
+                              : "bg-blue-100"
+                            : "bg-blue-200"
+                          : "bg-blue-300"
+                        : "bg-blue-400"
+                      : "bg-blue-500"
+                    : "bg-blue-600"
+                  : ""
+              }`}
+              key={tissueIndex}
+            >
+              <p className="text-[11px] text-center">
                 {closestEnhancers.get(snpElement[0])?.get(tissueElement[0])}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+              </p>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
   );
 };
 

@@ -112,7 +112,7 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
           <Text fontSize="xs">{value}</Text>
         </div>
       ))} */}
-      <div className="p-5 h-500 rounded-md bg-slate-400">
+      <div className="p-5 h-500 rounded-md border-black border bg-gray-50">
         <ControlPanel
           explorerSubmit={() => explorerSubmit()}
           handleReset={() => handleReset()}
