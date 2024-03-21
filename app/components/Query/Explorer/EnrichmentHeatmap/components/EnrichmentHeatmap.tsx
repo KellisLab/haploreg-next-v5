@@ -34,7 +34,7 @@ const EnrichmentHeatmap = ({
 }: Props) => {
   if (!enrichments || isCELoading) return null;
   return (
-    <div className="basis-1/2 overflow-scroll">
+    <div className="basis-1/2 overflow-auto">
       <Grid
         templateAreas={`"settings tissues"
                   "snps distance"`}

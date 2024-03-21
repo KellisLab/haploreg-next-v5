@@ -44,8 +44,8 @@ const StreamEffectsTable = forwardRef<StreamEffectsRef, Props>(
     };
 
     return (
-      <div className="basis-1/2 overflow-scroll">
-        <Tabs variant="enclosed">
+      <div className="basis-1/2 overflow-auto pt-[35px]">
+        <Tabs variant="line">
           <TabList>
             {savedStreamEffects.map((data, index) => (
               <HStack key={index}>
@@ -63,15 +63,28 @@ const StreamEffectsTable = forwardRef<StreamEffectsRef, Props>(
           <TabPanels>
             {savedStreamEffects.map((data, index) => (
               <TabPanel key={index}>
-                {data[1].map((snpElement, snpIndex) => (
-                  <p key={snpIndex}>
-                    {streamEffects
-                      .get(snpElement[0] as string)
-                      ?.motifs.map((motif, motifIndex) => (
-                        <span key={motifIndex}>{motif}</span>
+                <Tabs variant="line">
+                  <TabList>
+                    <Tab>{"Motifs"}</Tab>
+                    <Tab>{"Enhancers"}</Tab>
+                    <Tab>{"Promoters"}</Tab>
+                    <Tab>{"Frequency"}</Tab>
+                    <Tab></Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      {data[1].map((snpElement, snpIndex) => (
+                        <p key={snpIndex} className="py-[10px] text-[10px]">
+                          {streamEffects
+                            .get(snpElement[0] as string)
+                            ?.motifs.map((motif, motifIndex) => (
+                              <span key={motifIndex}>{motif};</span>
+                            ))}
+                        </p>
                       ))}
-                  </p>
-                ))}
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
               </TabPanel>
             ))}
           </TabPanels>
