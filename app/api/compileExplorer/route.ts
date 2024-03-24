@@ -37,7 +37,6 @@ const CHR_RANGE_PARSER: RegExp =
 export async function GET(request: NextRequest) {
   QUERY_TIME = 0;
   const start = performance.now();
-  console.log("start compileExplorer");
 
   const searchParams = request.nextUrl.searchParams;
   const input = JSON.parse(searchParams.get("input")!) as InputOptions;
@@ -131,8 +130,7 @@ export async function GET(request: NextRequest) {
   }
 
   const first = performance.now();
-  const firstTime = first - start;
-  console.log(`compileExplorer to end first prisma: ${firstTime} milliseconds`);
+  // const firstTime = first - start;
 
   const flatSnps = snps.flat();
 
@@ -154,10 +152,7 @@ export async function GET(request: NextRequest) {
     // SELECT chr, pos, id from snp_v2 WHERE id IN ('rs10', 'rs15', 'rs20', 'rs28716236') ORDER BY chr, pos
 
     const second = performance.now();
-    const secondTime = second - start;
-    console.log(
-      `compileExplorer to end second prisma: ${secondTime} milliseconds`
-    );
+    // const secondTime = second - start;
 
     const allEnhancerPromises = [];
     const max_dist = input.proximityLimit;
@@ -174,8 +169,8 @@ export async function GET(request: NextRequest) {
         select: { start: true, end: true, tissue_id: true, tissue_name: true },
         where: {
           AND: [
-            { start: { gte: snp.pos - max_dist } },
-            { end: { lte: snp.pos + max_dist } },
+            { start: { lte: snp.pos + max_dist, gte: snp.pos - max_dist } },
+            { end: { lte: snp.pos + max_dist, gte: snp.pos - max_dist } },
             { chr: chrNumName },
           ],
         },
@@ -183,7 +178,7 @@ export async function GET(request: NextRequest) {
       allEnhancerPromises.push(snpEnhancers);
     }
 
-    console.log("waiting on queries to return");
+    // console.log("waiting on queries to return");
 
     const allEnhancers = await Promise.all(allEnhancerPromises);
     const snpEnhancerPairs = snpPositions.map((obj, index) => [
@@ -192,12 +187,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     const third = performance.now();
-    const thirdTime = third - start;
-    console.log(
-      `compileExplorer to end third prisma: ${thirdTime} milliseconds`
-    );
-
-    // console.log(allEnhancers);
+    // const thirdTime = third - start;
 
     const allEnrichments: Map<string, Map<string, number>> = new Map();
     const closestEnhancers: Map<string, Map<string, number>> = new Map();
@@ -237,13 +227,9 @@ export async function GET(request: NextRequest) {
     // console.log(snpNameMap);
 
     const end = performance.now();
-    const executionTime = end - start;
-    console.log("---");
-    console.log(
-      `compileExplorer execution time: ${executionTime} milliseconds`
-    );
-    console.log(`compileExplorer query time: ${QUERY_TIME} milliseconds`);
-    console.log("---");
+    // const executionTime = end - start;
+    // console.log(`compileExplorer query time: ${QUERY_TIME} milliseconds`);
+    // console.log("---");
 
     return NextResponse.json({
       input: input,
