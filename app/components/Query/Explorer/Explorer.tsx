@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
-import DNALoadingSpinner from "../../Loader/DNALoadingSpinner";
 import ControlPanel from "./EnrichmentHeatmap/components/ControlPanel";
 import EnrichmentHeatmap from "./EnrichmentHeatmap/components/EnrichmentHeatmap";
 import StreamEffectsTable from "./EnrichmentHeatmap/components/StreamEffectsTable";
 import { EnrichmentDataType } from "./hooks/useHaploBlockEnrichment";
 
-export interface StreamEffectsRef {
-  handleAdd: () => void;
+export interface SavedStreamEffects {
+  label: string;
+  snpFilters: string[];
+  tissueFilters: string[];
+  snpRanking: [string, number][];
+  // motifs: string[];
 }
-
 interface Props {
   enrichmentData: EnrichmentDataType;
   explorerSubmit: () => void;
 }
 
-let tab_default_name = 1;
+let tab_default_label = 1;
+let changed_filters = 1;
 
 const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
   const [tissueFilter, setTissueFilter] = useState<string[]>([]);
@@ -22,9 +25,9 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
   const [appliedTissueFilter, setAppliedTissueFilter] = useState<string[]>([]);
   const [appliedSnpFilter, setAppliedSnpFilter] = useState<string[]>([]);
 
-  const [streamEffectName, setStreamEffectName] = useState("");
+  const [streamEffectLabel, setStreamEffectName] = useState("");
   const [savedStreamEffects, setSavedStreamEffects] = useState<
-    [string, [string, number][]][]
+    SavedStreamEffects[]
   >([]);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
@@ -77,11 +80,17 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
   // .slice(0, 10); // top 15 tissues
 
   useEffect(() => {
-    console.log("effect");
-    console.log(snpRanking);
-    setSavedStreamEffects([["current", snpRanking]]);
+    setSavedStreamEffects([
+      {
+        label: "current",
+        snpFilters: snpFilter,
+        tissueFilters: tissueFilter,
+        snpRanking: snpRanking,
+      },
+      ...savedStreamEffects.filter((data) => data.label !== "current"),
+    ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [changed_filters]);
 
   const handleTissueSelect = (e: string) => {
     if (tissueFilter.includes(e)) {
@@ -104,41 +113,51 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
     setSnpFilter([]);
     setAppliedTissueFilter([]);
     setAppliedSnpFilter([]);
+    changed_filters++;
   };
 
   const handleApply = () => {
     setAppliedTissueFilter(tissueFilter);
     setAppliedSnpFilter(snpFilter);
+    changed_filters++;
   };
 
   const handleRevert = () => {
     if (currentTab === 0) return;
     // set filters to the ones that yielded the results in savedStreamEffects[currentTab]
+    setTissueFilter(savedStreamEffects[currentTab].tissueFilters);
+    setSnpFilter(savedStreamEffects[currentTab].snpFilters);
+    setAppliedTissueFilter(savedStreamEffects[currentTab].tissueFilters);
+    setAppliedSnpFilter(savedStreamEffects[currentTab].snpFilters);
+    changed_filters++;
     return;
   };
 
   const handleAdd = () => {
     setSavedStreamEffects([
       ...savedStreamEffects,
-      [
-        streamEffectName ? streamEffectName : String(tab_default_name),
-        snpRanking,
-      ],
+      {
+        label: streamEffectLabel
+          ? streamEffectLabel
+          : String(tab_default_label),
+        snpFilters: snpFilter,
+        tissueFilters: tissueFilter,
+        snpRanking: snpRanking,
+      },
     ]);
-    tab_default_name++;
-    console.log(savedStreamEffects);
+    tab_default_label++;
   };
 
   const changeCurrentTab = (idx: number) => {
-    console.log(idx);
     setCurrentTab(idx);
   };
 
-  const handleDelete = (deleteTitle: string) => {
-    console.log(deleteTitle);
+  const handleDelete = (deleteLabel: string) => {
     setSavedStreamEffects(
-      savedStreamEffects.filter((title) => title[0] !== deleteTitle)
+      savedStreamEffects.filter((data) => data.label !== deleteLabel)
     );
+    if (deleteLabel === savedStreamEffects[currentTab].label)
+      setCurrentTab(currentTab - 1);
   };
 
   return (
@@ -156,7 +175,7 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
           handleRevert={() => handleRevert()}
           handleAdd={() => handleAdd()}
           setStreamEffectName={(e) => setStreamEffectName(e)}
-          streamEffectName={streamEffectName}
+          streamEffectLabel={streamEffectLabel}
         />
         <div className="flex flex-row mt-5 gap-4 ">
           <EnrichmentHeatmap
@@ -171,6 +190,7 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
             <StreamEffectsTable
               savedStreamEffects={savedStreamEffects}
               streamEffects={enrichmentData.streamEffects}
+              currentTab={currentTab}
               changeCurrentTab={(idx) => changeCurrentTab(idx)}
               handleDelete={(name) => handleDelete(name)}
             />

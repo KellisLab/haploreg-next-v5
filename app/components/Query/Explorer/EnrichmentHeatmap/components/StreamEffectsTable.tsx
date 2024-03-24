@@ -7,13 +7,13 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { forwardRef } from "react";
-import { StreamEffectsRef } from "../../Explorer";
 import { StreamEffects } from "../../hooks/useHaploBlockEnrichment";
+import { SavedStreamEffects } from "../../Explorer";
 
 interface Props {
-  savedStreamEffects: [string, [string, number][]][];
+  savedStreamEffects: SavedStreamEffects[];
   streamEffects: Map<string, StreamEffects>;
+  currentTab: number;
   changeCurrentTab: (idx: number) => void;
   handleDelete: (name: string) => void;
 }
@@ -21,21 +21,26 @@ interface Props {
 const StreamEffectsTable = ({
   savedStreamEffects,
   streamEffects,
+  currentTab,
   changeCurrentTab,
   handleDelete,
 }: Props) => {
   return (
     <div className="basis-1/2 overflow-auto pt-[35px]">
-      <Tabs variant="line" onChange={(index) => changeCurrentTab(index)}>
+      <Tabs
+        index={currentTab}
+        variant="line"
+        onChange={(index) => changeCurrentTab(index)}
+      >
         <TabList>
           {savedStreamEffects.map((data, index) => (
             <HStack key={index}>
-              <Tab>{data[0]}</Tab>
-              {data[0] !== "current" ? (
+              <Tab>{data.label}</Tab>
+              {data.label !== "current" ? (
                 <CloseButton
-                  id={data[0]}
+                  id={data.label}
                   size="sm"
-                  onClick={() => handleDelete(data[0])}
+                  onClick={() => handleDelete(data.label)}
                 />
               ) : null}
             </HStack>
@@ -54,7 +59,7 @@ const StreamEffectsTable = ({
                 </TabList>
                 <TabPanels>
                   <TabPanel>
-                    {data[1].map((snpElement, snpIndex) => (
+                    {data.snpRanking.map((snpElement, snpIndex) => (
                       <p key={snpIndex} className="py-[10px] text-[10px]">
                         {streamEffects
                           .get(snpElement[0] as string)

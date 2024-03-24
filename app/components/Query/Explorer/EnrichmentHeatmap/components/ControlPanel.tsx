@@ -16,7 +16,7 @@ interface Props {
   handleRevert: () => void;
   handleAdd: () => void;
   setStreamEffectName: (e: string) => void;
-  streamEffectName: string;
+  streamEffectLabel: string;
 }
 
 const ControlPanel = ({
@@ -26,7 +26,7 @@ const ControlPanel = ({
   handleRevert,
   handleAdd,
   setStreamEffectName,
-  streamEffectName,
+  streamEffectLabel,
 }: Props) => {
   const { inputOptions, dispatch } = useContext(InputContext);
 
@@ -76,7 +76,7 @@ const ControlPanel = ({
           Save Data
         </Button>
         <Input
-          value={streamEffectName}
+          value={streamEffectLabel}
           onChange={(event) => setStreamEffectName(event.target.value)}
           width="auto"
         />
