@@ -28,7 +28,7 @@ const useHaploBlockEnrichment = (inputOptions: InputOptions) => {
     url.searchParams.append("input", JSON.stringify(inputOptions));
     const response = await fetch(url);
     const outputJson = await response.json();
-    console.log(outputJson);
+    // console.log(outputJson);
     setEnrichmentData({
       isCELoading: false,
       streamEffects: objectToFlatMap(outputJson.success.streamEffects),

@@ -174,9 +174,9 @@ export async function GET(request: NextRequest) {
         select: { start: true, end: true, tissue_id: true, tissue_name: true },
         where: {
           AND: [
-            { chr: chrNumName },
             { start: { gte: snp.pos - max_dist } },
             { end: { lte: snp.pos + max_dist } },
+            { chr: chrNumName },
           ],
         },
       });

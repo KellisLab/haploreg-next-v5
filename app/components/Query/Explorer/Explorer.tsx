@@ -1,5 +1,4 @@
-import { Flex, HStack } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import DNALoadingSpinner from "../../Loader/DNALoadingSpinner";
 import ControlPanel from "./EnrichmentHeatmap/components/ControlPanel";
 import EnrichmentHeatmap from "./EnrichmentHeatmap/components/EnrichmentHeatmap";
@@ -15,20 +14,19 @@ interface Props {
   explorerSubmit: () => void;
 }
 
-const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
-  const saveStreamEffectsRef = useRef<StreamEffectsRef | null>(null);
-  const [streamEffectName, setStreamEffectName] = useState("");
+let tab_default_name = 1;
 
+const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
   const [tissueFilter, setTissueFilter] = useState<string[]>([]);
   const [snpFilter, setSnpFilter] = useState<string[]>([]);
   const [appliedTissueFilter, setAppliedTissueFilter] = useState<string[]>([]);
   const [appliedSnpFilter, setAppliedSnpFilter] = useState<string[]>([]);
 
-  if (enrichmentData.isCELoading) {
-    return <DNALoadingSpinner />;
-  } else if (!enrichmentData.enrichments) {
-    return null;
-  }
+  const [streamEffectName, setStreamEffectName] = useState("");
+  const [savedStreamEffects, setSavedStreamEffects] = useState<
+    [string, [string, number][]][]
+  >([]);
+  const [currentTab, setCurrentTab] = useState<number>(0);
 
   let partiallyFilteredEnrichments = [...enrichmentData.enrichments.entries()];
   if (appliedSnpFilter.length !== 0) {
@@ -46,7 +44,7 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
       ),
     ]);
   } else {
-    // if nothing is selected, then just show everything (but still need to convery type)
+    // if nothing is selected, then just show everything (but still need to convey type)
     enrichmentsToUse = partiallyFilteredEnrichments.map((enrichments) => [
       enrichments[0],
       [...enrichments[1].entries()],
@@ -70,12 +68,20 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
     }
   }
 
-  const snpRanking = [...snpEnrichments.entries()].sort((a, b) => b[1] - a[1]);
-  // .slice(0, 7); // take top 7 snps for now
+  const snpRanking = [...snpEnrichments.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 7); // take top 7 snps for now
   const tissueRanking = [...tissueEnrichments.entries()].sort(
     (a, b) => b[1] - a[1]
   );
   // .slice(0, 10); // top 15 tissues
+
+  useEffect(() => {
+    console.log("effect");
+    console.log(snpRanking);
+    setSavedStreamEffects([["current", snpRanking]]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleTissueSelect = (e: string) => {
     if (tissueFilter.includes(e)) {
@@ -93,16 +99,46 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
     }
   };
 
-  const handleApply = () => {
-    setAppliedTissueFilter(tissueFilter);
-    setAppliedSnpFilter(snpFilter);
-  };
-
   const handleReset = () => {
     setTissueFilter([]);
     setSnpFilter([]);
     setAppliedTissueFilter([]);
     setAppliedSnpFilter([]);
+  };
+
+  const handleApply = () => {
+    setAppliedTissueFilter(tissueFilter);
+    setAppliedSnpFilter(snpFilter);
+  };
+
+  const handleRevert = () => {
+    if (currentTab === 0) return;
+    // set filters to the ones that yielded the results in savedStreamEffects[currentTab]
+    return;
+  };
+
+  const handleAdd = () => {
+    setSavedStreamEffects([
+      ...savedStreamEffects,
+      [
+        streamEffectName ? streamEffectName : String(tab_default_name),
+        snpRanking,
+      ],
+    ]);
+    tab_default_name++;
+    console.log(savedStreamEffects);
+  };
+
+  const changeCurrentTab = (idx: number) => {
+    console.log(idx);
+    setCurrentTab(idx);
+  };
+
+  const handleDelete = (deleteTitle: string) => {
+    console.log(deleteTitle);
+    setSavedStreamEffects(
+      savedStreamEffects.filter((title) => title[0] !== deleteTitle)
+    );
   };
 
   return (
@@ -117,9 +153,10 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
           explorerSubmit={() => explorerSubmit()}
           handleReset={() => handleReset()}
           handleApply={() => handleApply()}
+          handleRevert={() => handleRevert()}
+          handleAdd={() => handleAdd()}
           setStreamEffectName={(e) => setStreamEffectName(e)}
           streamEffectName={streamEffectName}
-          saveStreamEffectsRef={saveStreamEffectsRef}
         />
         <div className="flex flex-row mt-5 gap-4 ">
           <EnrichmentHeatmap
@@ -130,12 +167,14 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
             tissueSelect={(e) => handleTissueSelect(e)}
             snpSelect={(e) => handleSnpSelect(e)}
           />
-          <StreamEffectsTable
-            snpRanking={snpRanking}
-            streamEffects={enrichmentData.streamEffects}
-            streamEffectName={streamEffectName}
-            ref={saveStreamEffectsRef}
-          />
+          {savedStreamEffects ? (
+            <StreamEffectsTable
+              savedStreamEffects={savedStreamEffects}
+              streamEffects={enrichmentData.streamEffects}
+              changeCurrentTab={(idx) => changeCurrentTab(idx)}
+              handleDelete={(name) => handleDelete(name)}
+            />
+          ) : null}
         </div>
       </div>
     </div>

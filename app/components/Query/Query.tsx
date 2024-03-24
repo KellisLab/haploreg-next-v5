@@ -11,6 +11,7 @@ import { Button } from "@chakra-ui/react";
 import useHaploRegTableData from "./Table/hooks/useHaploRegTableData";
 import Explorer from "./Explorer/Explorer";
 import useHaploBlockEnhancement from "./Explorer/hooks/useHaploBlockEnrichment";
+import DNALoadingSpinner from "../Loader/DNALoadingSpinner";
 
 const Query = () => {
   const [showInteractiveExplorer, setShowInteractiveExplorer] = useState(true);
@@ -46,6 +47,12 @@ const Query = () => {
     queryEnrichments();
   };
 
+  // if (enrichmentData.isCELoading) {
+  //   return <DNALoadingSpinner />;
+  // } else if (!enrichmentData.enrichments) {
+  //   return null;
+  // }
+
   return (
     <>
       <InputContext.Provider value={{ inputOptions, dispatch }}>
@@ -54,10 +61,16 @@ const Query = () => {
           <Button type="submit">Submit</Button>
         </form>
         {enrichmentData ? (
-          <Explorer
-            enrichmentData={enrichmentData}
-            explorerSubmit={() => handleExplorerSubmit()}
-          />
+          !enrichmentData.isCELoading ? (
+            enrichmentData.enrichments ? (
+              <Explorer
+                enrichmentData={enrichmentData}
+                explorerSubmit={() => handleExplorerSubmit()}
+              />
+            ) : null
+          ) : (
+            <DNALoadingSpinner />
+          )
         ) : null}
         {/* <Suspense fallback={<DNALoadingSpinner />}> It would be nice to make this server side at some point*/}
         {/* <HaploRegTable regionTable={regionTable} /> */}

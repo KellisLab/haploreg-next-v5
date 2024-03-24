@@ -5,27 +5,28 @@ import {
   NumberInput,
   NumberInputField,
 } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import InputContext from "../../../Input/dataManagement/inputContext";
 import { InputFields } from "../../../Input/dataManagement/inputReducer";
-import { StreamEffectsRef } from "../../Explorer";
 
 interface Props {
   explorerSubmit: () => void;
   handleReset: () => void;
   handleApply: () => void;
+  handleRevert: () => void;
+  handleAdd: () => void;
   setStreamEffectName: (e: string) => void;
   streamEffectName: string;
-  saveStreamEffectsRef: React.MutableRefObject<StreamEffectsRef | null>;
 }
 
 const ControlPanel = ({
   explorerSubmit,
   handleReset,
   handleApply,
+  handleRevert,
+  handleAdd,
   setStreamEffectName,
   streamEffectName,
-  saveStreamEffectsRef,
 }: Props) => {
   const { inputOptions, dispatch } = useContext(InputContext);
 
@@ -59,7 +60,7 @@ const ControlPanel = ({
         <Button bgColor="blue.100" onClick={() => handleApply()}>
           Apply Filters
         </Button>
-        <Button bgColor="purple.100" onClick={() => {}}>
+        <Button bgColor="purple.100" onClick={() => handleRevert()}>
           Revert Filters
         </Button>
         <Button
@@ -68,7 +69,7 @@ const ControlPanel = ({
           // disable save button if name is already used for another tab, but its not the end
           // of the world if a user is dumb and does this
           onClick={() => {
-            saveStreamEffectsRef.current?.handleAdd();
+            handleAdd();
             setStreamEffectName("");
           }}
         >
