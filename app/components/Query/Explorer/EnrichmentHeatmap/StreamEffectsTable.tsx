@@ -20,13 +20,12 @@ interface Props {
 
 const StreamEffectsTable = ({
   savedStreamEffects,
-  streamEffects,
   currentTab,
   changeCurrentTab,
   handleDelete,
 }: Props) => {
   return (
-    <div className="basis-1/2 overflow-auto pt-[35px]">
+    <div className="basis-1/2 pt-[35px] ">
       <Tabs
         index={currentTab}
         variant="line"
@@ -48,26 +47,56 @@ const StreamEffectsTable = ({
         </TabList>
         <TabPanels>
           {savedStreamEffects.map((data, index) => (
-            <TabPanel key={index}>
+            <TabPanel key={index} paddingBottom={0}>
               <Tabs variant="line">
                 <TabList>
-                  <Tab>{"Motifs"}</Tab>
-                  <Tab>{"Enhancers"}</Tab>
-                  <Tab>{"Promoters"}</Tab>
-                  <Tab>{"Frequency"}</Tab>
+                  <Tab>Motifs</Tab>
+                  <Tab>EQTLs</Tab>
+                  <Tab>Enh</Tab>
+                  <Tab>Freq</Tab>
                   <Tab></Tab>
                 </TabList>
                 <TabPanels>
-                  <TabPanel>
-                    {data.snpRanking.map((snpElement, snpIndex) => (
+                  <TabPanel paddingBottom={0}>
+                    {data.snpRanking.map((snps, snpIndex) => (
+                      <p className="py-[10px] text-[10px]" key={snpIndex}>
+                        {data.motifs[snpIndex].join(", ")}
+                      </p>
+                    ))}
+                  </TabPanel>
+                  <TabPanel paddingBottom={0}>
+                    {/* {data.snpRanking.map((snpElement, snpIndex) => (
                       <p key={snpIndex} className="py-[10px] text-[10px]">
                         {streamEffects
                           .get(snpElement[0] as string)
                           ?.motifs.map((motif, motifIndex) => (
-                            <span key={motifIndex}>{motif};</span>
+                            <span key={motifIndex}>EQTLs</span>
                           ))}
                       </p>
-                    ))}
+                    ))} */}
+                  </TabPanel>
+                  <TabPanel paddingBottom={0}></TabPanel>
+                  <TabPanel paddingBottom={0}>
+                    <div className="flex flex-row justify-between overflow-auto">
+                      <div>
+                        <p>Motifs:</p>
+                        <ol>
+                          {[...data.frequency.get("motifs")!].map(
+                            (pair, idx) => (
+                              <li className="text-[10px]" key={idx}>
+                                {pair[0]}: {pair[1]}
+                              </li>
+                            )
+                          )}
+                        </ol>
+                      </div>
+                      <div>
+                        <p>EQTLs:</p>
+                      </div>
+                      <div>
+                        <p>Downstream Enhancers:</p>
+                      </div>
+                    </div>
                   </TabPanel>
                 </TabPanels>
               </Tabs>

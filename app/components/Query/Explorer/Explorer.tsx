@@ -9,7 +9,8 @@ export interface SavedStreamEffects {
   snpFilters: string[];
   tissueFilters: string[];
   snpRanking: [string, number][];
-  // motifs: string[];
+  motifs: string[][];
+  frequency: Map<string, Map<string, number>>;
 }
 interface Props {
   enrichmentData: EnrichmentDataType;
@@ -73,10 +74,28 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
 
   const snpRanking = [...snpEnrichments.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 7); // take top 7 snps for now
+    .slice(0, 10); // take top 7 snps for now
   const tissueRanking = [...tissueEnrichments.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 20); // top <x> tissues
+
+  const motifs: string[][] = snpRanking.map(
+    (snpElement) =>
+      enrichmentData.streamEffects.get(snpElement[0] as string)?.motifs ?? [""]
+  );
+
+  const frequency: Map<string, Map<string, number>> = new Map();
+  const motifsFreq: Map<string, number> = new Map();
+  for (const snp of motifs) {
+    for (const motif of snp) {
+      if (motifsFreq.has(motif)) {
+        motifsFreq.set(motif, motifsFreq.get(motif)! + 1);
+      } else {
+        motifsFreq.set(motif, 1);
+      }
+    }
+  }
+  frequency.set("motifs", motifsFreq);
 
   useEffect(() => {
     setSavedStreamEffects([
@@ -85,6 +104,8 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
         snpFilters: snpFilter,
         tissueFilters: tissueFilter,
         snpRanking: snpRanking,
+        motifs: motifs,
+        frequency: frequency,
       },
       ...savedStreamEffects.filter((data) => data.label !== "current"),
     ]);
@@ -142,6 +163,8 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
         snpFilters: snpFilter,
         tissueFilters: tissueFilter,
         snpRanking: snpRanking,
+        motifs: motifs,
+        frequency: frequency,
       },
     ]);
     tab_default_label++;
@@ -166,7 +189,7 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
           <Text fontSize="xs">{value}</Text>
         </div>
       ))} */}
-      <div className="p-5 h-500 rounded-md border-black border bg-gray-50">
+      <div className="p-5 pb-10 h-300 rounded-md border-black border bg-gray-50">
         <ControlPanel
           explorerSubmit={() => explorerSubmit()}
           handleReset={() => handleReset()}

@@ -20,7 +20,7 @@ const HeatmapColHeader = ({
     <>
       <div className="pl-5">
         {snpEnrichmentPair.map((pair, index) => (
-          <div key={index}>
+          <div key={index} className="">
             <HStack>
               <Checkbox
                 value={pair[0]}

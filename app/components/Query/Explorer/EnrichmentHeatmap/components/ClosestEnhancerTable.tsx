@@ -1,5 +1,5 @@
 import React from "react";
-import { Rankings } from "../../EnrichmentHeatmap";
+import { Rankings } from "../EnrichmentHeatmap";
 
 interface Props {
   rankings: Rankings;

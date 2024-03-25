@@ -46,6 +46,7 @@ const ControlPanel = ({
           <NumberInputField className="w-10" />
         </NumberInput>
         <Button
+          fontSize="sm"
           bgColor="orange.100"
           onClick={() => {
             explorerSubmit();
@@ -54,16 +55,21 @@ const ControlPanel = ({
         >
           Apply Enh Prox
         </Button>
-        <Button bgColor="red.100" onClick={() => handleReset()}>
+        <Button fontSize="sm" bgColor="red.100" onClick={() => handleReset()}>
           Reset Filters
         </Button>
-        <Button bgColor="blue.100" onClick={() => handleApply()}>
+        <Button fontSize="sm" bgColor="blue.100" onClick={() => handleApply()}>
           Apply Filters
         </Button>
-        <Button bgColor="purple.100" onClick={() => handleRevert()}>
+        <Button
+          fontSize="sm"
+          bgColor="purple.100"
+          onClick={() => handleRevert()}
+        >
           Revert Filters
         </Button>
         <Button
+          fontSize="sm"
           bgColor="green.100"
           // disabled={} need to prob life savedStreamEffects from StreamEffectsTable.tsx to
           // disable save button if name is already used for another tab, but its not the end

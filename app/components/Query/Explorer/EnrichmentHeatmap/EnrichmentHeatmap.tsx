@@ -40,7 +40,6 @@ const EnrichmentHeatmap = ({
                   "snps distance"`}
         gridTemplateRows={"150px 1fr"}
         gridTemplateColumns={"150px 1fr"}
-        h="500px"
         color="blackAlpha.700"
         fontWeight="bold"
       >
