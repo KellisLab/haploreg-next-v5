@@ -6,8 +6,8 @@ import {
   NumberInputField,
 } from "@chakra-ui/react";
 import { useContext } from "react";
-import InputContext from "../../../Input/dataManagement/inputContext";
-import { InputFields } from "../../../Input/dataManagement/inputReducer";
+import InputContext from "../../Input/dataManagement/inputContext";
+import { InputFields } from "../../Input/dataManagement/inputReducer";
 
 interface Props {
   explorerSubmit: () => void;

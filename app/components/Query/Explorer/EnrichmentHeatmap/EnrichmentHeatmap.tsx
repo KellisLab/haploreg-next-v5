@@ -2,7 +2,7 @@ import { Button, Flex, Grid, GridItem, HStack } from "@chakra-ui/react";
 import HeatmapColHeader from "./components/HeatmapColHeader";
 import HeatmapRowHeader from "./components/HeatmapRowHeader";
 import ClosestEnhancerTable from "./components/ClosestEnhancerTable";
-import { EnrichmentDataType } from "../../hooks/useHaploBlockEnrichment";
+import { EnrichmentDataType } from "../hooks/useHaploBlockEnrichment";
 
 export interface Rankings {
   tissueRanking: [string, number][];

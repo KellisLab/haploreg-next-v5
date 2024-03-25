@@ -7,8 +7,8 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { StreamEffects } from "../../hooks/useHaploBlockEnrichment";
-import { SavedStreamEffects } from "../../Explorer";
+import { StreamEffects } from "../hooks/useHaploBlockEnrichment";
+import { SavedStreamEffects } from "../Explorer";
 
 interface Props {
   savedStreamEffects: SavedStreamEffects[];

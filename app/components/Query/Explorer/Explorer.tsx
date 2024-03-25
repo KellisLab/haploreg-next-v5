@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import ControlPanel from "./EnrichmentHeatmap/components/ControlPanel";
-import EnrichmentHeatmap from "./EnrichmentHeatmap/components/EnrichmentHeatmap";
-import StreamEffectsTable from "./EnrichmentHeatmap/components/StreamEffectsTable";
+import ControlPanel from "./EnrichmentHeatmap/ControlPanel";
+import EnrichmentHeatmap from "./EnrichmentHeatmap/EnrichmentHeatmap";
+import StreamEffectsTable from "./EnrichmentHeatmap/StreamEffectsTable";
 import { EnrichmentDataType } from "./hooks/useHaploBlockEnrichment";
 
 export interface SavedStreamEffects {
