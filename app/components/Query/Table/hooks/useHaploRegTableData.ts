@@ -48,6 +48,7 @@ const useQueryResult = (inputOptions: InputOptions) => {
     url.searchParams.append("input", JSON.stringify(inputOptions));
     const response = await fetch(url);
     const outputJson = await response.json();
+    // console.log(outputJson);
     setRegionTable({
       isCTLoading: false,
       input: outputJson.input,

@@ -53,7 +53,11 @@ const TabledData = ({
                 variants with r² ≥{" "}
                 <span className="text-gray-800">{input.ld}</span>
               </p>
-              <RegionTable inputOptions={input} data={element} />
+              <RegionTable
+                inputOptions={input}
+                data={element}
+                header={headers[index]}
+              />
             </Fragment>
           ))}
         </div>

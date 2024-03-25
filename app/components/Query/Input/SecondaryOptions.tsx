@@ -21,8 +21,8 @@ const SecondaryOptions = () => {
             })
           }
           value={inputOptions.ld}
-          className="block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          style={{ padding: "4px 35px 4px 8px" }}
+          className="block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-[13px]"
+          style={{ padding: "2px 35px 2px 8px" }}
         >
           <option value={0.2}>0.2</option>
           <option value={0.4}>0.4</option>
@@ -64,8 +64,8 @@ const SecondaryOptions = () => {
             })
           }
           value={inputOptions.source}
-          className="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          style={{ padding: "4px 8px" }}
+          className="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-[13px]"
+          style={{ padding: "2px 8px" }}
         >
           <option value="vanilla">ChromHMM (Core 15-state model)</option>
           <option value="imputed">
@@ -126,8 +126,8 @@ const SecondaryOptions = () => {
             })
           }
           value={inputOptions.condenseLists}
-          className="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          style={{ padding: "4px 8px" }}
+          className="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-[13px]"
+          style={{ padding: "2px 8px" }}
         >
           <option value="1">1</option>
           <option value="2">2</option>
@@ -149,8 +149,8 @@ const SecondaryOptions = () => {
           }
           id="condenseOligos"
           value={inputOptions.condenseOligos}
-          className="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          style={{ padding: "4px 8px" }}
+          className="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-[13px]"
+          style={{ padding: "2px 8px" }}
         >
           <option value="1">1</option>
           <option value="6">6</option>

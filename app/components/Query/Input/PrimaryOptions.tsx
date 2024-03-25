@@ -22,7 +22,7 @@ const Query = () => {
 
   return (
     <>
-      <p>
+      <p className="text-[13px]">
         Use one of the three methods below to enter a set of variants. If an r²
         threshold is specified (see the Set Options tab), results for each
         variant will be shown in a separate table along with other variants in
@@ -43,7 +43,7 @@ const Query = () => {
             })
           }
         />
-        <p>
+        <p className="text-[13px]">
           Query (comma-delimited list of rsIDs OR a single region as
           chrN:start-end):
         </p>
@@ -61,8 +61,8 @@ const Query = () => {
             });
           }}
           type="text"
-          style={{ padding: "4px 35px 4px 8px" }}
-          className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          style={{ padding: "2px 35px 2px 8px" }}
+          className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-[13px]"
           placeholder=""
         />
       </div>
@@ -81,9 +81,10 @@ const Query = () => {
             })
           }
         />
-        <p>Upload File (.txt):</p>
+        <p className="text-[13px]">Upload File (.txt):</p>
         <input
           type="file"
+          className="text-[13px]"
           onChange={(e) => {
             handleFileUpload(e);
             dispatch({
@@ -109,7 +110,7 @@ const Query = () => {
             })
           }
         />
-        <p className="whitespace-nowrap">Select GWAS:</p>
+        <p className="whitespace-nowrap text-[13px]">Select GWAS:</p>
         <select
           onChange={(e) => {
             dispatch({
@@ -124,8 +125,8 @@ const Query = () => {
             });
           }}
           value={inputOptions.gwas}
-          style={{ padding: "4px 35px 4px 8px" }}
-          className="min-w-0 overflow-hidden mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          style={{ padding: "2px 35px 2px 8px" }}
+          className="min-w-0 overflow-hidden mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-[13px]"
         >
           <option value="">-- Select a GWAS Study--</option>
           {gwasList.map((gwas, index) => (

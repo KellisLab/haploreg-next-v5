@@ -74,10 +74,9 @@ const Explorer = ({ enrichmentData, explorerSubmit }: Props) => {
   const snpRanking = [...snpEnrichments.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 7); // take top 7 snps for now
-  const tissueRanking = [...tissueEnrichments.entries()].sort(
-    (a, b) => b[1] - a[1]
-  );
-  // .slice(0, 10); // top 15 tissues
+  const tissueRanking = [...tissueEnrichments.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 20); // top <x> tissues
 
   useEffect(() => {
     setSavedStreamEffects([

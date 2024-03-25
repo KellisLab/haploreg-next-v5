@@ -1,13 +1,14 @@
 const Header = () => {
   return (
     <>
-      <h1 className="mb-4 text-4xl font-bold leading-none tracking-tight">
+      <h1 className="mb-4 text-3xl font-bold leading-none tracking-tight">
         HaploReg v5
       </h1>
-      <h4 className="mb-4 text-1xl font-bold leading-none tracking-tight">
-        with genome exploration support from IGV
+      <h4 className="mb-2 text-[15px] font-bold leading-none tracking-tight">
+        with enhancer analysis from EpiMap, ... and genome visualization support
+        from IGV
       </h4>
-      <p>
+      <p className="text-[13px]">
         HaploReg is a tool for exploring annotations of the noncoding genome at
         variants on haplotype blocks, such as candidate regulatory SNPs at
         disease-associated loci. Using LD information from the 1000 Genomes

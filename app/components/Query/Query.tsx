@@ -73,7 +73,7 @@ const Query = () => {
           )
         ) : null}
         {/* <Suspense fallback={<DNALoadingSpinner />}> It would be nice to make this server side at some point*/}
-        {/* <HaploRegTable regionTable={regionTable} /> */}
+        <HaploRegTable regionTable={regionTable} />
         {/* </Suspense> */}
       </InputContext.Provider>
     </>

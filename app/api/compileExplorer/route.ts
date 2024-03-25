@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma/client";
-import enrichment from "./helpers/enrichment";
+import { StreamEffects } from "@/app/components/Query/Explorer/hooks/useHaploBlockEnrichment";
 import { InputOptions } from "@/app/components/Query/Input/dataManagement/inputReducer";
 import QueryType from "@/app/types/QueryType";
+import prisma from "@/prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import enrichment from "./helpers/enrichment";
 import mapToObjectRec from "./helpers/mapToObjectRec";
-import { StreamEffects } from "@/app/components/Query/Explorer/hooks/useHaploBlockEnrichment";
-import { PrefixPathnameNormalizer } from "next/dist/server/future/normalizers/request/prefix";
 
 interface snpInfo {
   chr: any;

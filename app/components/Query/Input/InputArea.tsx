@@ -11,7 +11,7 @@ const InputArea = () => {
   return (
     <div className="flex flex-col">
       <Tabs tab={tab} setTab={(tab: number) => setTab(tab)} />
-      <div className="my-4 rounded-lg border p-4">
+      <div className="mt-2 mb-4 rounded-lg border p-4">
         <div className={tab === 0 ? "block" : "hidden"}>
           <PrimaryOptions />
         </div>

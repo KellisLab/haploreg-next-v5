@@ -10,13 +10,13 @@ interface Props {
 const tabs = ({ tab, setTab }: Props) => {
   return (
     <>
-      <ul className="flex space-x-2 p-2 bg-gray-100 rounded-lg mt-4 w-[26rem] justify-around">
+      <ul className="flex space-x-1 p-2 bg-gray-100 rounded-lg mt-4 w-[20rem] justify-around">
         <li>
           <a
             href="#"
             onClick={() => setTab(0)}
             className={clsx(
-              "inline-block px-4 py-2 rounded-lg",
+              "inline-block px-2 py-1 rounded-lg text-[12px] font-semibold",
               tab == 0 ? "bg-white" : "bg-gray-100"
             )}
           >
@@ -28,7 +28,7 @@ const tabs = ({ tab, setTab }: Props) => {
             href="#"
             onClick={() => setTab(1)}
             className={clsx(
-              "inline-block px-4 py-2 rounded-lg",
+              "inline-block px-2 py-1 rounded-lg text-[12px] font-semibold",
               tab == 1 ? "bg-white" : "bg-gray-100"
             )}
           >
@@ -40,7 +40,7 @@ const tabs = ({ tab, setTab }: Props) => {
             href="#"
             onClick={() => setTab(2)}
             className={clsx(
-              "inline-block px-4 py-2 rounded-lg",
+              "inline-block px-2 py-1 rounded-lg text-[12px] font-semibold",
               tab == 2 ? "bg-white" : "bg-gray-100"
             )}
           >

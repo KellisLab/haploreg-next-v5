@@ -1,7 +1,7 @@
 const Docs = () => {
   return (
     <>
-      <p>
+      <p className="mb-2">
         For details on data sources and methods along with usage examples, see
         the{" "}
         <a
@@ -13,8 +13,7 @@ const Docs = () => {
         </a>{" "}
         (opens in a pop-up window.)
       </p>{" "}
-      <br></br>{" "}
-      <p>
+      <p className="mb-2">
         The HaploReg database and web interface were originally produced by{" "}
         <a
           className="text-blue-600 hover:underline"
@@ -32,8 +31,7 @@ const Docs = () => {
         </a>
         .{" "}
       </p>
-      <br></br>
-      <p>
+      <p className="mb-2">
         To cite HaploReg, please refer to our publication in Nucleic Acids
         Research:{" "}
         <a
@@ -46,8 +44,7 @@ const Docs = () => {
         </a>{" "}
         (PMID:22064851).{" "}
       </p>
-      <br></br>
-      <p>
+      <p className="mb-2">
         The underlying data are available in the following{" "}
         <a
           className="text-blue-600 hover:underline"
@@ -57,7 +54,6 @@ const Docs = () => {
         </a>
         .{" "}
       </p>
-      <br></br>
       <p>Contact: haploreg@mit.edu </p>
     </>
   );

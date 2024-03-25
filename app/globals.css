@@ -33,4 +33,10 @@ body {
   h4 {
     @apply mb-4 text-lg font-bold leading-none tracking-tight
   }
+  p {
+    @apply text-[13px]
+  }
+  /* br {
+    @apply text-[13px]
+  } */
 }
