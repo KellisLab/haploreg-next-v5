@@ -1,3 +1,8 @@
+This is the most recent development repository for HaploReg v5. This update was originally authored by Ian Gatlin (ian.gatlin10@gmail.com).
+
+
+____________________________________________
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
